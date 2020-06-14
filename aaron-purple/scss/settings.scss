@@ -1,0 +1,53 @@
+// Base settings for all themes that can optionally be
+// overridden by the super-theme
+
+
+$color-primary-0: #8377D1;	// Main Primary color */
+$color-primary-1: #D6D1F7;
+$color-primary-2: #ABA1E6;
+$color-primary-3: #6254B8;
+$color-primary-4: #4739A2;
+
+
+
+// Background of the presentation
+$backgroundColor: #D6D1F7;
+
+// Primary/body text
+$mainFont: 'Open Sans', sans-serif;
+$mainFontSize: 36px;
+$mainColor: rgba(0,0,0,.5);
+
+// Vertical spacing between blocks of text
+$blockMargin: 20px;
+
+// Headings
+$headingMargin: 0 0 $blockMargin 0;
+$headingFont: 'Open Sans', sans-serif;
+$headingColor: #8377D1;
+$headingLineHeight: 1em;
+$headingLetterSpacing: -2px;
+$headingTextTransform: none;
+$headingTextShadow: none;
+$headingFontWeight: normal;
+$heading1TextShadow: $headingTextShadow;
+
+$heading1Size: 3.77em;
+$heading2Size: 2.11em;
+$heading3Size: 1.55em;
+$heading4Size: 1.00em;
+
+$codeFont: monospace;
+
+// Links and actions
+$linkColor: #6254B8;
+$linkColorHover: lighten( $linkColor, 20% );
+
+// Text selection
+$selectionBackgroundColor: #ADA7C9;
+$selectionColor: #fff;
+
+@mixin bodyBackground() {
+	background-image: url("images/asanoha-400px.png");
+	//background: $backgroundColor;
+}

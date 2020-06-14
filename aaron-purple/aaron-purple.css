@@ -1,0 +1,551 @@
+/**
+ * Template Name: Aaron-Purple
+ */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,300,700);
+@font-face {
+  font-family: "MythBusters";
+  src: url("fonts/MythBusters.woff2") format("woff2"), url("fonts/MythBusters.woff") format("woff"), url("fonts/MythBusters.ttf") format("truetype");
+}
+.reveal {
+  /**
+   * Galleries
+   */
+  /**
+   * End Galleries
+   */
+}
+.reveal span.myth-busted,
+.reveal span.myth-plausible,
+.reveal span.myth-confirmed {
+  display: block;
+  font-family: "MythBusters";
+  font-size: 5em;
+  color: #C00;
+  border: 10px solid #C00;
+  padding: 0 30px;
+  background: rgba(214, 209, 247, 0.5);
+  /* Center it */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+}
+.reveal span.stamp {
+  display: block;
+  font-size: 5em;
+  color: #8377D1;
+  border: 10px solid #8377D1;
+  padding: 0 30px;
+  background: rgba(214, 209, 247, 0.75);
+  /* Center it */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+}
+.reveal .permalink {
+  display: none;
+}
+.reveal a.social-icon-link {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.reveal a.social-icon-link svg {
+  vertical-align: middle;
+  max-height: 1em;
+  max-width: 1em;
+  width: 1em;
+  fill: #6254B8;
+}
+.reveal .persistent-twitter-link {
+  font-size: 75%;
+  left: 0;
+  bottom: 0;
+  padding: 10px;
+  position: fixed;
+  z-index: 30;
+}
+.reveal .persistent-twitter-link a:hover svg {
+  fill: #a49cd6;
+}
+.reveal .slides section {
+  /**
+   * Highlights
+   *
+   * Make sure to add new highlight classes here to make sure they inherit visibility from parent,
+   * Then add new section below
+   */
+  /**
+   * End Highlights
+   */
+  /* Columns */
+}
+.reveal .slides section img {
+  border: 0;
+  box-shadow: none;
+}
+.reveal .slides section .fragment.remove-when-hidden:not(.visible) {
+  display: none;
+}
+.reveal .slides section .fragment.swap-out {
+  display: inline;
+  visibility: visible;
+  opacity: 1;
+}
+.reveal .slides section .fragment.swap-out.block {
+  display: block;
+}
+.reveal .slides section .fragment.swap-out.visible {
+  display: none;
+}
+.reveal .slides section .fragment.swap-in {
+  display: none;
+}
+.reveal .slides section .fragment.swap-in.visible {
+  display: inline;
+  visibility: visible;
+  opacity: 1;
+}
+.reveal .slides section .fragment.swap-in.visible.block {
+  display: block;
+}
+.reveal .slides section .box-solid {
+  background-image: url("images/asanoha-400px.png");
+  border-radius: 0.2em;
+  padding: 0.25em;
+}
+.reveal .slides section .fragment.always-visible.highlight,
+.reveal .slides section .fragment.always-visible.highlight-current,
+.reveal .slides section .fragment.always-visible.highlight-text,
+.reveal .slides section .fragment.always-visible.highlight-current-text,
+.reveal .slides section .fragment.always-visible.highlight-bold,
+.reveal .slides section .fragment.always-visible.highlight-current-bold {
+  opacity: 1;
+  visibility: inherit;
+}
+.reveal .slides section .highlight,
+.reveal .slides section .fragment.highlight.visible,
+.reveal .slides section .fragment.highlight-current.current-fragment {
+  background: rgba(214, 209, 247, 0.7);
+}
+.reveal .slides section .highlight-text,
+.reveal .slides section .fragment.highlight-text.visible,
+.reveal .slides section .fragment.highlight-current-text.current-fragment {
+  color: #8377D1;
+}
+.reveal .slides section .highlight-bold,
+.reveal .slides section .fragment.highlight-bold.visible,
+.reveal .slides section .fragment.highlight-current-bold.current-fragment {
+  font-weight: bold;
+}
+.reveal .slides section .dark {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.reveal .slides section .light {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.reveal .slides section .columns,
+.reveal .slides section ul.columns {
+  display: grid;
+  grid-column-gap: 1em;
+}
+.reveal .slides section .columns.two,
+.reveal .slides section ul.columns.two {
+  grid-template-columns: 50% 50%;
+}
+.reveal .slides section .columns.three,
+.reveal .slides section ul.columns.three {
+  grid-template-columns: 33% 34% 33%;
+}
+.reveal .slides section .columns.four,
+.reveal .slides section ul.columns.four {
+  grid-template-columns: 25% 25% 25% 25%;
+}
+.reveal .slides section .columns li,
+.reveal .slides section ul.columns li {
+  height: auto;
+}
+.reveal .gallery-item {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  width: 100%;
+}
+.reveal .gallery-columns-2 .gallery-item {
+  max-width: 50%;
+}
+.reveal .gallery-columns-3 .gallery-item {
+  max-width: 33.33%;
+}
+.reveal .gallery-columns-4 .gallery-item {
+  max-width: 25%;
+}
+.reveal .gallery-columns-5 .gallery-item {
+  max-width: 20%;
+}
+.reveal .gallery-columns-6 .gallery-item {
+  max-width: 16.66%;
+}
+.reveal .gallery-columns-7 .gallery-item {
+  max-width: 14.28%;
+}
+.reveal .gallery-columns-8 .gallery-item {
+  max-width: 12.5%;
+}
+.reveal .gallery-columns-9 .gallery-item {
+  max-width: 11.11%;
+}
+.reveal .gallery-caption {
+  display: block;
+}
+
+.dark-box-twitter .persistent-twitter-link {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.box-twitter .persistent-twitter-link {
+  background-image: url("images/asanoha-400px.png");
+  border-radius: 0.2em;
+}
+
+.hide-twitter .persistent-twitter-link {
+  display: none;
+}
+
+.rotate-twitter .persistent-twitter-link {
+  -webkit-transform-origin: 0.5em 50%;
+  -moz-transform-origin: 0.5em 50%;
+  -ms-transform-origin: 0.5em 50%;
+  -o-transform-origin: 0.5em 50%;
+  transform-origin: 0.5em 50%;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  margin-left: 0.5em;
+}
+
+@media screen and (max-width: 699px) {
+  .reveal p.persistent-twitter-link {
+    display: none;
+  }
+}
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+body {
+  background-image: url("images/asanoha-400px.png");
+  background-color: #D6D1F7;
+}
+
+.reveal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 36px;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+::selection {
+  color: #fff;
+  background: #ADA7C9;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  color: #fff;
+  background: #ADA7C9;
+  text-shadow: none;
+}
+
+.reveal .slides section,
+.reveal .slides section > section {
+  line-height: 1.3;
+  font-weight: inherit;
+}
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: 0 0 20px 0;
+  color: #8377D1;
+  font-family: "Open Sans", sans-serif;
+  font-weight: normal;
+  line-height: 1em;
+  letter-spacing: -2px;
+  text-transform: none;
+  text-shadow: none;
+  word-wrap: break-word;
+}
+
+.reveal h1 {
+  font-size: 3.77em;
+}
+
+.reveal h2 {
+  font-size: 2.11em;
+}
+
+.reveal h3 {
+  font-size: 1.55em;
+}
+
+.reveal h4 {
+  font-size: 1em;
+}
+
+.reveal h1 {
+  text-shadow: none;
+}
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: 20px 0;
+  line-height: 1.3;
+}
+
+/* Ensure certain elements are never larger than the slide itself */
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 95%;
+  max-height: 95%;
+}
+
+.reveal strong,
+.reveal b {
+  font-weight: bold;
+}
+
+.reveal em {
+  font-style: italic;
+}
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em;
+}
+
+.reveal ol {
+  list-style-type: decimal;
+}
+
+.reveal ul {
+  list-style-type: disc;
+}
+
+.reveal ul ul {
+  list-style-type: square;
+}
+
+.reveal ul ul ul {
+  list-style-type: circle;
+}
+
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  display: block;
+  margin-left: 40px;
+}
+
+.reveal dt {
+  font-weight: bold;
+}
+
+.reveal dd {
+  margin-left: 40px;
+}
+
+.reveal blockquote {
+  color: #8377D1;
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: 20px auto;
+  padding: 5px;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.reveal blockquote p:first-child,
+.reveal blockquote p:last-child {
+  display: inline-block;
+}
+
+.reveal q {
+  font-style: italic;
+}
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reveal code {
+  font-family: monospace;
+  text-transform: none;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+}
+
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal table th {
+  font-weight: bold;
+}
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid;
+}
+
+.reveal table th[align=center],
+.reveal table td[align=center] {
+  text-align: center;
+}
+
+.reveal table th[align=right],
+.reveal table td[align=right] {
+  text-align: right;
+}
+
+.reveal table tbody tr:last-child th,
+.reveal table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.reveal sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.reveal small {
+  display: inline-block;
+  font-size: 0.6em;
+  line-height: 1.2em;
+  vertical-align: top;
+}
+
+.reveal small * {
+  vertical-align: top;
+}
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: #6254B8;
+  text-decoration: none;
+  -webkit-transition: color 0.15s ease;
+  -moz-transition: color 0.15s ease;
+  transition: color 0.15s ease;
+}
+
+.reveal a:hover {
+  color: #a49cd6;
+  text-shadow: none;
+  border: none;
+}
+
+.reveal .roll span:after {
+  color: #fff;
+  background: #433887;
+}
+
+/*********************************************
+ * IMAGES
+ *********************************************/
+.reveal section img {
+  margin: 15px 0px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 4px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.reveal section img.plain {
+  border: 0;
+  box-shadow: none;
+}
+
+.reveal a img {
+  -webkit-transition: all 0.15s linear;
+  -moz-transition: all 0.15s linear;
+  transition: all 0.15s linear;
+}
+
+.reveal a:hover img {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #6254B8;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
+}
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls {
+  color: #6254B8;
+}
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+  color: #6254B8;
+}
+
+.reveal .progress span {
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+/*********************************************
+ * PRINT BACKGROUND
+ *********************************************/
+@media print {
+  .backgrounds {
+    background-color: #D6D1F7;
+  }
+}
+
+/*# sourceMappingURL=aaron-purple.css.map */
