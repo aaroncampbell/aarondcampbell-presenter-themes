@@ -22,12 +22,28 @@ class aaronDCampbellPresenterThemes {
 	protected function __construct() {
 		add_filter( 'presenter-theme-directories', array( $this, 'add_theme_location' ), null, 2 );
 		add_filter( 'presenter-reveal-footer', array( $this, 'presenter_reveal_footer' ) );
+		add_filter( 'presenter-default-theme', array( $this, 'presenter_default_theme' ) );
+		add_filter( 'presenter-theme', array( $this, 'presenter_theme' ) );
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ) );
 	}
 
 	public function add_theme_location( $presenter_theme_directories ) {
 		$presenter_theme_directories[] = __DIR__;
 		return $presenter_theme_directories;
+	}
+
+	public function presenter_default_theme( string $theme ) {
+		return str_replace( WP_CONTENT_DIR, '', plugin_dir_path( __FILE__ ) . 'aaron-purple/aaron-purple.css' );
+	}
+
+	// Filter theme
+	public function presenter_theme( string $theme ) {
+		// If the theme isn't ours in the old location, just pass it through
+		if ( $theme != content_url( '/themes/aarondcampbell/presenter/aaron-purple/aaron-purple.css' ) ) {
+			return $theme;
+		}
+		// New location of theme
+		return plugin_dir_url( __file__ ) . 'aaron-purple/aaron-purple.css';
 	}
 
 	public function presenter_reveal_footer( $slide ) {
