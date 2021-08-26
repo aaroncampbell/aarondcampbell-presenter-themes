@@ -22,6 +22,7 @@ class aaronDCampbellPresenterThemes {
 	protected function __construct() {
 		add_filter( 'presenter-theme-directories', array( $this, 'add_theme_location' ), null, 2 );
 		add_filter( 'presenter-reveal-footer', array( $this, 'presenter_reveal_footer' ) );
+		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ) );
 	}
 
 	public function add_theme_location( $presenter_theme_directories ) {
@@ -41,6 +42,16 @@ class aaronDCampbellPresenterThemes {
 			</a>
 		</p>
 		<?php
+	}
+
+	/**
+	 * Filters the object passed to Reveal.initialize
+	 */
+	public function presenter_init_object( $reveal_initialize_object ) {
+		// Use no transition as the default
+		$reveal_initialize_object->transition = 'none';
+		$reveal_initialize_object->backgroundTransition = 'none';
+		return $reveal_initialize_object;
 	}
 
 	/**
