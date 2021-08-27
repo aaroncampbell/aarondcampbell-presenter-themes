@@ -25,6 +25,7 @@ class aaronDCampbellPresenterThemes {
 		add_filter( 'presenter-default-theme', array( $this, 'presenter_default_theme' ) );
 		add_filter( 'presenter-theme', array( $this, 'presenter_theme' ) );
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ) );
+		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ) );
 	}
 
 	public function add_theme_location( $presenter_theme_directories ) {
@@ -34,6 +35,12 @@ class aaronDCampbellPresenterThemes {
 
 	public function presenter_default_theme( string $theme ) {
 		return str_replace( WP_CONTENT_DIR, '', plugin_dir_path( __FILE__ ) . 'aaron-purple/aaron-purple.css' );
+	}
+
+	public function presenter_reveal_js_dependencies( $reveal_js_dependencies ) {
+		wp_register_script( 'RevealChartjs', plugins_url( 'js/chartjs-plugin.js', __FILE__ ), array(), '1.1.0', true );
+		$reveal_js_dependencies[] = 'RevealChartjs';
+		return $reveal_js_dependencies;
 	}
 
 	// Filter theme
