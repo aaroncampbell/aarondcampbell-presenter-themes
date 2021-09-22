@@ -3,18 +3,61 @@
  */
 
 
-// Default mixins and settings -----------------
+// Default mixins, settings, and theme - copied from reveal.js
 @import "mixins";
 @import "settings";
 // ---------------------------------------------
+
+/**
+ * My colors & settings (overrides for reveal.js theme defaults)
+ */
+$color-primary-0: #8377D1;  // Main Primary color */
+$color-primary-1: #D6D1F7;
+$color-primary-2: #ABA1E6;
+$color-primary-3: #6254B8;
+$color-primary-4: #4739A2;
+
+// Background of the presentation
+$backgroundColor: #D6D1F7;
+
+// Primary/body text
+$mainFont: 'Open Sans', sans-serif;
+$mainFontSize: 36px;
+$mainColor: rgba(0,0,0,.5);
+
+// Headings
+$headingFont: 'Open Sans', sans-serif;
+$headingColor: #8377D1;
+$headingLineHeight: 1em;
+$headingLetterSpacing: -2px;
+$headingTextTransform: none;
+
+// Links and actions
+$linkColor: #6254B8;
+
+// Text selection
+$selectionBackgroundColor: #ADA7C9;
+
+@mixin bodyBackground() {
+	background-image: url("images/asanoha-400px.png");
+}
+
+/**
+ * End My colors & settings
+ */
+
+// Theme template ------------------------------
+@import "theme";
+// ---------------------------------------------
+
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,300,700);
 
 @font-face {
 	font-family: 'MythBusters';
 	src: url( 'fonts/MythBusters.woff2' ) format( 'woff2' ),
-	     url( 'fonts/MythBusters.woff' ) format( 'woff' ),
-	     url( 'fonts/MythBusters.ttf' ) format( 'truetype' );
+		 url( 'fonts/MythBusters.woff' ) format( 'woff' ),
+		 url( 'fonts/MythBusters.ttf' ) format( 'truetype' );
 }
 
 .reveal {
@@ -74,10 +117,23 @@
 		}
 	}
 
+	blockquote {
+		color: $headingColor;
+	}
+
+	code {
+		tab-size: 4;
+	}
+
 	.slides section {
 		img {
 			border: 0;
 			box-shadow: none;
+			margin: 15px 0px;
+		}
+
+		a:hover img {
+			border-color: $linkColor;
 		}
 
 		.fragment.remove-when-hidden:not(.visible) {
@@ -258,10 +314,8 @@
 	}
 }
 
-// Theme template ------------------------------
-@import "theme";
-// ---------------------------------------------
 
 // Code Highlight ------------------------------
 @import "highlight";
 // ---------------------------------------------
+@import "theme";
