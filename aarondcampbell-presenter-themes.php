@@ -3,7 +3,7 @@
  * Plugin Name: Aaron D. Campbell - Presenter Themes
  * Plugin URI: http://aarondcampbell.com/wordpress-plugins/presenter/
  * Description: Aaron's themes for Presenter
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Aaron D. Campbell
  * Author URI: http://aarondcampbell.com/
  * Text Domain: presenter
@@ -84,7 +84,7 @@ class aaronDCampbellPresenterThemes {
 	 * @param WP_Query $query WordPress Query object passed to pre_get_posts filter
 	 */
 	public function hide_password_protected_slideshows( $query ) {
-		if( $query->is_post_type_archive( 'slideshow' ) ) {
+		if( !( is_admin() || current_user_can( 'manage_options' ) ) && $query->is_post_type_archive( 'slideshow' ) ) {
 			$query->set( 'has_password', false );
 		}
 	}
