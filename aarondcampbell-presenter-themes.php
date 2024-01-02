@@ -3,7 +3,7 @@
  * Plugin Name: Aaron D. Campbell - Presenter Themes
  * Plugin URI: http://aarondcampbell.com/wordpress-plugins/presenter/
  * Description: Aaron's themes for Presenter
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Aaron D. Campbell
  * Author URI: http://aarondcampbell.com/
  * Text Domain: presenter
