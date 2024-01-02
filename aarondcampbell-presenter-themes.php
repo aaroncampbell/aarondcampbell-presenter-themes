@@ -3,7 +3,7 @@
  * Plugin Name: Aaron D. Campbell - Presenter Themes
  * Plugin URI: http://aarondcampbell.com/wordpress-plugins/presenter/
  * Description: Aaron's themes for Presenter
- * Version: 1.1.0
+ * Version: 1.2.1
  * Author: Aaron D. Campbell
  * Author URI: http://aarondcampbell.com/
  * Text Domain: presenter
@@ -26,6 +26,7 @@ class aaronDCampbellPresenterThemes {
 		add_filter( 'presenter-theme', array( $this, 'presenter_theme' ) );
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ) );
 		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ) );
+		add_filter( 'pre_get_posts', array( $this, 'hide_password_protected_slideshows' ) );
 	}
 
 	public function add_theme_location( $presenter_theme_directories ) {
@@ -82,6 +83,17 @@ class aaronDCampbellPresenterThemes {
 		$reveal_initialize_object->transition = 'none';
 		$reveal_initialize_object->backgroundTransition = 'none';
 		return $reveal_initialize_object;
+	}
+
+	/**
+	 * Filters the object passed to Reveal.initialize
+	 *
+	 * @param WP_Query $query WordPress Query object passed to pre_get_posts filter
+	 */
+	public function hide_password_protected_slideshows( $query ) {
+		if( !( is_admin() || current_user_can( 'manage_options' ) ) && $query->is_post_type_archive( 'slideshow' ) ) {
+			$query->set( 'has_password', false );
+		}
 	}
 
 	/**
