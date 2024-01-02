@@ -38,8 +38,15 @@ class aaronDCampbellPresenterThemes {
 	}
 
 	public function presenter_reveal_js_dependencies( $reveal_js_dependencies ) {
+		// Add Chart JS
 		wp_register_script( 'RevealChartjs', plugins_url( 'js/chartjs-plugin.js', __FILE__ ), array(), '1.1.0', true );
 		$reveal_js_dependencies[] = 'RevealChartjs';
+
+		// Remove Math JS (causes weird displays of code and I don't do much math)
+		if ( ( $key = array_search( 'RevealMath', $reveal_js_dependencies ) ) !== false ) {
+			unset( $reveal_js_dependencies[$key] );
+		}
+
 		return $reveal_js_dependencies;
 	}
 
