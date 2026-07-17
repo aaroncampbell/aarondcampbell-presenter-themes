@@ -24,6 +24,8 @@ class aaronDCampbellPresenterThemes {
 		add_filter( 'presenter-reveal-footer', array( $this, 'presenter_reveal_footer' ) );
 		add_filter( 'presenter-default-theme', array( $this, 'presenter_default_theme' ) );
 		add_filter( 'presenter-theme', array( $this, 'presenter_theme' ) );
+		add_filter( 'presenter_theme_registry', array( $this, 'presenter_theme_registry' ) );
+		add_filter( 'presenter_default_theme_id', array( $this, 'presenter_default_theme_id' ), 10, 2 );
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ) );
 		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ) );
 		add_filter( 'pre_get_posts', array( $this, 'hide_password_protected_slideshows' ) );
@@ -36,6 +38,42 @@ class aaronDCampbellPresenterThemes {
 
 	public function presenter_default_theme( string $theme ) {
 		return str_replace( WP_CONTENT_DIR, '', plugin_dir_path( __FILE__ ) . 'aaron-purple/aaron-purple.css' );
+	}
+
+	/**
+	 * Register Aaron Purple with Presenter 2.0's stable theme registry.
+	 *
+	 * The conditional keeps this companion plugin compatible with Presenter 1.x,
+	 * where the Theme value object does not exist.
+	 *
+	 * @param array<string, object> $themes Presenter themes keyed by stable ID.
+	 * @return array<string, object> Filtered Presenter themes.
+	 */
+	public function presenter_theme_registry( array $themes ): array {
+		if ( ! class_exists( '\\Presenter\\Theme' ) ) {
+			return $themes;
+		}
+
+		$theme = new \Presenter\Theme(
+			'aaron-purple',
+			'Aaron Purple',
+			plugins_url( 'aaron-purple/aaron-purple.css', __FILE__ )
+		);
+
+		$themes[ $theme->id() ] = $theme;
+
+		return $themes;
+	}
+
+	/**
+	 * Use Aaron Purple as Presenter 2.0's site-default theme when registered.
+	 *
+	 * @param string                $theme_id Current default theme ID.
+	 * @param array<string, object> $themes   Presenter themes keyed by stable ID.
+	 * @return string Filtered default theme ID.
+	 */
+	public function presenter_default_theme_id( string $theme_id, array $themes ): string {
+		return isset( $themes['aaron-purple'] ) ? 'aaron-purple' : $theme_id;
 	}
 
 	public function presenter_reveal_js_dependencies( $reveal_js_dependencies ) {
