@@ -57,7 +57,11 @@ class aaronDCampbellPresenterThemes {
 		$theme = new \Presenter\Theme(
 			'aaron-purple',
 			'Aaron Purple',
-			plugins_url( 'aaron-purple/aaron-purple.css', __FILE__ )
+			plugins_url( 'aaron-purple/aaron-purple.css', __FILE__ ),
+			array(
+				'/plugins/aarondcampbell-presenter-themes/aaron-purple/aaron-purple.css',
+				'/themes/aarondcampbell/presenter/aaron-purple/aaron-purple.css',
+			)
 		);
 
 		$themes[ $theme->id() ] = $theme;
