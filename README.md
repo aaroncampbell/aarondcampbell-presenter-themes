@@ -22,8 +22,8 @@ composer phpcs
 composer check:audit
 ```
 
-Install the dependency-free Node workspace and run the shipped JavaScript's
-syntax and behavior checks:
+Install the pinned Node development dependencies and run the theme CSS and
+shipped JavaScript checks:
 
 ```sh
 npm ci
@@ -31,11 +31,26 @@ npm run check
 npm run check:audit
 ```
 
-`npm run check` runs `node --check` against the production Chart integration
-and its focused `node:test` suite. CI applies WordPress JavaScript lint and
-formatting standards through Presenter's pinned development toolchain. The
-JavaScript is shipped directly; there is no bundler or generated JavaScript
-output.
+`npm run check` verifies that the committed theme CSS matches its Sass source,
+runs `node --check` against the production Chart integration and development
+tools, and runs the focused `node:test` suite. CI applies WordPress JavaScript
+lint and formatting standards through Presenter's pinned development
+toolchain. The JavaScript is shipped directly; there is no bundler or generated
+JavaScript output.
+
+The theme CSS is generated from the Sass sources with the exact Dart Sass
+version in `package-lock.json`:
+
+```sh
+npm run build:css
+npm run check:css
+```
+
+Commit the generated CSS with its source changes. Source maps are intentionally
+disabled: release packages exclude the Sass source, so shipping maps would not
+provide usable debugging context. The current compatibility compiler preserves
+the historical CSS output. Migrating the source from Sass `@import` and legacy
+color helpers is a separate, visually reviewed change.
 
 The integration tests use Presenter's shared `wp-env` WordPress installation.
 In the adjacent `presenter` repository, copy `.wp-env.override.example.json` to
@@ -46,10 +61,6 @@ Then start the environment and run:
 npm run env:start
 npx wp-env run tests-cli --env-cwd=wp-content/plugins/aarondcampbell-presenter-themes -- vendor/bin/phpunit --configuration=phpunit.xml.dist
 ```
-
-The checked-in CSS remains a compatibility asset. Its modern build pipeline is
-being established separately; do not regenerate it with an unpinned local
-toolchain.
 
 After committing a release, build the separately distributed plugin archive:
 

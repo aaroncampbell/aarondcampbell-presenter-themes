@@ -10,11 +10,16 @@
 	},
 	"packageManager": "npm@11.12.1",
 	"scripts": {
-		"check": "npm run check:js && npm run test:js",
+		"build:css": "node tools/theme-css.mjs build",
+		"check": "npm run check:css && npm run check:js && npm run test:js",
 		"check:audit": "npm audit",
-		"check:js": "node --check js/chartjs-plugin.js && node --check tools/package-plugin.mjs",
+		"check:css": "node tools/theme-css.mjs check",
+		"check:js": "node --check js/chartjs-plugin.js && node --check tools/package-plugin.mjs && node --check tools/theme-css.mjs",
 		"package": "node tools/package-plugin.mjs",
 		"test": "npm run test:js",
 		"test:js": "node --test tests/js/*.test.js"
+	},
+	"devDependencies": {
+		"sass": "1.78.0"
 	}
 }

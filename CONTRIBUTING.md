@@ -6,13 +6,14 @@ release and packaging lifecycle separate from the public Presenter plugin.
 ## Standards
 
 -   Support WordPress 7.0 or later and PHP 8.3 or later.
--   Use Node.js 24 and npm 11 for JavaScript checks.
+-   Use Node.js 24 and npm 11 for JavaScript and theme CSS checks.
 -   Follow WordPress Core, Documentation, and Extra coding standards.
 -   Keep public hooks backward-compatible unless a change is explicitly planned.
 -   Add focused tests for behavior changes and avoid persistent database writes in
     registration or rendering callbacks.
--   Preserve generated theme and script assets unless the change also establishes
-    and verifies the corresponding deterministic build.
+-   Run `npm run build:css` after changing theme Sass and commit the generated CSS
+    with its source. `npm run check` rejects stale generated CSS without modifying
+    the working tree.
 -   Keep the Chart integration dependency-free. It adapts authored global chart
     and dataset objects to Reveal fragments; it does not bundle Chart.js.
 -   Preserve both integration paths: the legacy `RevealChartjs` global and the
@@ -39,6 +40,11 @@ JavaScript behavior tests use Node's built-in `node:test` runner. Changes to
 listener registration, fragment show/hide behavior, repeat safety, malformed
 global references, and legacy/native registration. No browser DOM shim or chart
 library is required: use small Reveal, chart, and dataset test doubles.
+
+Theme CSS uses the exact Dart Sass compatibility version recorded in the npm
+lockfile. Do not update Sass or migrate deprecated Sass syntax without a separate
+review of the generated CSS and representative slides. Source maps are not
+generated because release packages intentionally exclude the Sass source.
 
 Then run the companion integration suite from the adjacent Presenter repository.
 Its ignored `.wp-env.override.json` must mount this sibling checkout as described
