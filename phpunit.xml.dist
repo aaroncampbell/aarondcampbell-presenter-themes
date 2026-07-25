@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="tests/php/bootstrap.php"
+	cacheResult="false"
+	colors="true"
+	failOnWarning="true"
+	failOnRisky="true"
+>
+	<testsuites>
+		<testsuite name="Aaron Campbell Presenter Themes PHP tests">
+			<directory suffix="_Test.php">tests/php</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

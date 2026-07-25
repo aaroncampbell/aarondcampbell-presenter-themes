@@ -1,0 +1,125 @@
+name: PHP quality
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+            - "modernization/**"
+
+permissions:
+    contents: read
+
+concurrency:
+    group: php-quality-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    quality:
+        name: PHP quality (8.3)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+              with:
+                  php-version: "8.3"
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install Composer dependencies
+              run: composer install --no-interaction --no-progress --prefer-dist
+
+            - name: Run PHP quality checks
+              run: composer check
+
+            - name: Check WordPress coding standards
+              run: composer phpcs
+
+            - name: Audit Composer dependencies
+              run: composer check:audit
+
+    syntax:
+        name: PHP syntax (${{ matrix.php }})
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php:
+                    - "8.3"
+                    - "8.4"
+                    - "8.5"
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Install Composer dependencies
+              run: composer install --no-interaction --no-progress --prefer-dist
+
+            - name: Check PHP syntax
+              run: composer lint
+
+    wordpress-integration:
+        name: Presenter and WordPress 7.0.1 integration
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out companion plugin
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  path: aarondcampbell-presenter-themes
+
+            - name: Check out Presenter
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  repository: aaroncampbell/presenter
+                  ref: modernization/2.0
+                  path: presenter
+                  submodules: recursive
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+              with:
+                  php-version: "8.3"
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+              with:
+                  node-version-file: presenter/.nvmrc
+                  cache: npm
+                  cache-dependency-path: presenter/package-lock.json
+
+            - name: Install dependencies
+              run: |
+                  composer install --working-dir=aarondcampbell-presenter-themes --no-interaction --no-progress --prefer-dist
+                  npm ci --prefix presenter
+
+            - name: Mount local companion plugin
+              run: cp presenter/.wp-env.override.example.json presenter/.wp-env.override.json
+
+            - name: Start WordPress
+              working-directory: presenter
+              run: npm run env:start
+
+            - name: Run companion integration tests
+              working-directory: presenter
+              run: npx wp-env run tests-cli --env-cwd=wp-content/plugins/aarondcampbell-presenter-themes -- vendor/bin/phpunit --configuration=phpunit.xml.dist
+
+            - name: Run Presenter integration tests
+              working-directory: presenter
+              run: npm run test:php
+
+            - name: Stop WordPress
+              if: always()
+              working-directory: presenter
+              run: npm run env:stop

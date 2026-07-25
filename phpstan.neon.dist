@@ -1,0 +1,19 @@
+parameters:
+	level: 5
+	treatPhpDocTypesAsCertain: false
+	paths:
+		- aarondcampbell-presenter-themes.php
+		- includes
+		- tests/php
+	bootstrapFiles:
+		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+	scanFiles:
+		- vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+	tmpDir: .phpunit.cache/phpstan
+	ignoreErrors:
+		-
+			message: '#^Constant WP_CONTENT_DIR not found\.$#'
+			path: includes/class-plugin.php
+		-
+			message: '#^Constant ARRAY_A not found\.$#'
+			path: tests/php/Plugin_Test.php

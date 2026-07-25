@@ -1,0 +1,10 @@
+/.phpunit.cache/
+/.phpunit.result.cache
+/coverage/
+/vendor/
+
+.DS_Store
+/.idea/
+/.vscode/
+/auth.json
+/composer.phar
