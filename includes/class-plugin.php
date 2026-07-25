@@ -8,6 +8,7 @@
 namespace AaronCampbell\PresenterThemes;
 
 use Presenter\Theme;
+use WP_Post;
 use WP_Query;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,8 +31,14 @@ final class Plugin {
 	/** Legacy Reveal plugin script handle. */
 	private const CHART_SCRIPT_HANDLE = 'RevealChartjs';
 
-	/** Legacy Reveal plugin script version. */
-	private const CHART_SCRIPT_VERSION = '1.1.0';
+	/** Native Presenter script handle for the Chart plugin bridge. */
+	private const NATIVE_CHART_SCRIPT_HANDLE = 'aaron-presenter-chartjs';
+
+	/** Reveal plugin identifier shared with the browser bridge. */
+	private const CHART_PLUGIN_ID = 'chartjs';
+
+	/** Shared legacy and native Chart bridge asset version. */
+	private const CHART_SCRIPT_VERSION = '1.3.0';
 
 	/**
 	 * Companion plugin entry file.
@@ -72,6 +79,7 @@ final class Plugin {
 		add_filter( 'presenter_default_theme_id', array( $this, 'presenter_default_theme_id' ), 10, 2 );
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ), 10, 1 );
 		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ), 10, 1 );
+		add_filter( 'presenter_reveal_plugins', array( $this, 'presenter_reveal_plugins' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'hide_password_protected_slideshows' ), 10, 1 );
 
 		$this->registered = true;
@@ -166,6 +174,45 @@ final class Plugin {
 				)
 			),
 			array( self::CHART_SCRIPT_HANDLE )
+		);
+	}
+
+	/**
+	 * Register and configure the Chart bridge for a native Presenter deck.
+	 *
+	 * The native handle is distinct from Presenter 1.x's dependency handle so
+	 * each runtime retains the loading contract it requires. Both scripts point
+	 * to the same compatibility asset.
+	 *
+	 * @param array<int, string> $plugins Reveal plugin IDs.
+	 * @param WP_Post            $post    Native presentation post.
+	 * @return array<int, string> Filtered Reveal plugin IDs.
+	 */
+	public function presenter_reveal_plugins( array $plugins, WP_Post $post ): array {
+		if ( 'slideshow' !== $post->post_type ) {
+			return $plugins;
+		}
+
+		wp_register_script(
+			self::NATIVE_CHART_SCRIPT_HANDLE,
+			plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ),
+			array( 'presenter-frontend' ),
+			self::CHART_SCRIPT_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+		wp_enqueue_script( self::NATIVE_CHART_SCRIPT_HANDLE );
+
+		return array_merge(
+			array_values(
+				array_filter(
+					$plugins,
+					static fn( string $plugin ): bool => ! in_array( $plugin, array( 'math', self::CHART_PLUGIN_ID ), true )
+				)
+			),
+			array( self::CHART_PLUGIN_ID )
 		);
 	}
 

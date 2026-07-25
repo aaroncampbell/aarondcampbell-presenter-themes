@@ -6,12 +6,17 @@ release and packaging lifecycle separate from the public Presenter plugin.
 ## Standards
 
 -   Support WordPress 7.0 or later and PHP 8.3 or later.
+-   Use Node.js 24 and npm 11 for JavaScript checks.
 -   Follow WordPress Core, Documentation, and Extra coding standards.
 -   Keep public hooks backward-compatible unless a change is explicitly planned.
 -   Add focused tests for behavior changes and avoid persistent database writes in
     registration or rendering callbacks.
 -   Preserve generated theme and script assets unless the change also establishes
     and verifies the corresponding deterministic build.
+-   Keep the Chart integration dependency-free. It adapts authored global chart
+    and dataset objects to Reveal fragments; it does not bundle Chart.js.
+-   Preserve both integration paths: the legacy `RevealChartjs` global and the
+    native Presenter plugin ID `chartjs`.
 
 ## Before committing
 
@@ -21,7 +26,19 @@ Run the local quality suite:
 composer check
 composer phpcs
 composer check:audit
+npm ci
+npm run check
+npm run check:audit
 ```
+
+Release archives must be built from a clean committed tree with
+`npm run package`; never distribute a repository source archive directly.
+
+JavaScript behavior tests use Node's built-in `node:test` runner. Changes to
+`js/chartjs-plugin.js` should add or update focused cases under `tests/js` for
+listener registration, fragment show/hide behavior, repeat safety, malformed
+global references, and legacy/native registration. No browser DOM shim or chart
+library is required: use small Reveal, chart, and dataset test doubles.
 
 Then run the companion integration suite from the adjacent Presenter repository.
 Its ignored `.wp-env.override.json` must mount this sibling checkout as described

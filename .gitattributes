@@ -13,3 +13,26 @@
 *.woff binary
 *.woff2 binary
 *.zip binary
+
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/.nvmrc export-ignore
+/CONTRIBUTING.md export-ignore
+/README.md export-ignore
+/composer.json export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/phpcompat.xml.dist export-ignore
+/phpcs.xml.dist export-ignore
+/phpstan.neon.dist export-ignore
+/phpunit.xml.dist export-ignore
+/tests export-ignore
+/tools export-ignore
+/aaron/aaron.css.map export-ignore
+/aaron/scss export-ignore
+/aaron-purple/.DS_Store export-ignore
+/aaron-purple/aaron-purple.css.map export-ignore
+/aaron-purple/scss export-ignore

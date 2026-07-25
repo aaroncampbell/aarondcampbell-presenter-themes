@@ -43,6 +43,8 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 		$this->remove_plugin_hooks( $this->plugin );
 		wp_dequeue_script( 'RevealChartjs' );
 		wp_deregister_script( 'RevealChartjs' );
+		wp_dequeue_script( 'aaron-presenter-chartjs' );
+		wp_deregister_script( 'aaron-presenter-chartjs' );
 		wp_set_current_user( 0 );
 
 		$GLOBALS['current_screen'] = null;
@@ -107,6 +109,11 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 				'method'        => 'presenter_reveal_js_dependencies',
 				'priority'      => 10,
 				'accepted_args' => 1,
+			),
+			'presenter_reveal_plugins'         => array(
+				'method'        => 'presenter_reveal_plugins',
+				'priority'      => 10,
+				'accepted_args' => 2,
 			),
 			'pre_get_posts'                    => array(
 				'method'        => 'hide_password_protected_slideshows',

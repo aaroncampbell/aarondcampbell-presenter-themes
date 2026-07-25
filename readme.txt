@@ -3,7 +3,7 @@ Contributors: aaroncampbell
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.2.2
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,12 @@ separately and is never packaged with the public Presenter plugin.
 Install and activate Presenter first, then install and activate this plugin.
 
 == Changelog ==
+
+= 1.3.0 =
+
+* Support the native Presenter Reveal extension API while retaining Presenter 1.x compatibility.
+* Make fragment-driven chart datasets deterministic and repeat-safe.
+* Add PHP and JavaScript quality tooling and automated integration coverage.
 
 = 1.2.2 =
 

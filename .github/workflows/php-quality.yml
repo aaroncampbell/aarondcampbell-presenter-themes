@@ -1,17 +1,17 @@
-name: PHP quality
+name: Quality
 
 on:
     pull_request:
     push:
         branches:
             - main
-            - "modernization/**"
+            - 'modernization/**'
 
 permissions:
     contents: read
 
 concurrency:
-    group: php-quality-${{ github.workflow }}-${{ github.ref }}
+    group: quality-${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
               with:
-                  php-version: "8.3"
+                  php-version: '8.3'
                   coverage: none
                   tools: composer:v2
 
@@ -48,9 +48,9 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - "8.3"
-                    - "8.4"
-                    - "8.5"
+                    - '8.3'
+                    - '8.4'
+                    - '8.5'
         steps:
             - name: Check out repository
               uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -68,6 +68,31 @@ jobs:
             - name: Check PHP syntax
               run: composer lint
 
+    javascript:
+        name: JavaScript quality (Node 24)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: Install npm dependencies
+              run: npm ci
+
+            - name: Run JavaScript checks
+              run: npm run check
+
+            - name: Audit npm dependencies
+              run: npm run check:audit
+
+            - name: Build distributable plugin package
+              run: npm run package
+
     wordpress-integration:
         name: Presenter and WordPress 7.0.1 integration
         runs-on: ubuntu-latest
@@ -81,14 +106,14 @@ jobs:
               uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
               with:
                   repository: aaroncampbell/presenter
-                  ref: modernization/2.0
+                  ref: 2de5baa41477b8e0e15c972c49a7a9dc7fc16e6e
                   path: presenter
                   submodules: recursive
 
             - name: Set up PHP
               uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
               with:
-                  php-version: "8.3"
+                  php-version: '8.3'
                   coverage: none
                   tools: composer:v2
 
@@ -104,6 +129,16 @@ jobs:
                   composer install --working-dir=aarondcampbell-presenter-themes --no-interaction --no-progress --prefer-dist
                   npm ci --prefix presenter
 
+            - name: Install Playwright Chromium
+              working-directory: presenter
+              run: npx playwright install --with-deps chromium
+
+            - name: Check companion JavaScript standards
+              working-directory: presenter
+              run: |
+                  npx wp-scripts lint-js "../aarondcampbell-presenter-themes/js/**/*.js" "../aarondcampbell-presenter-themes/tests/js/**/*.js" "../aarondcampbell-presenter-themes/tools/**/*.mjs" --no-error-on-unmatched-pattern
+                  npx prettier --check --config .prettierrc.json "../aarondcampbell-presenter-themes/js/**/*.js" "../aarondcampbell-presenter-themes/tests/js/**/*.js" "../aarondcampbell-presenter-themes/tools/**/*.mjs" "../aarondcampbell-presenter-themes/package.json" "../aarondcampbell-presenter-themes/.github/workflows/*.yml" "../aarondcampbell-presenter-themes/README.md" "../aarondcampbell-presenter-themes/CONTRIBUTING.md"
+
             - name: Mount local companion plugin
               run: cp presenter/.wp-env.override.example.json presenter/.wp-env.override.json
 
@@ -118,6 +153,10 @@ jobs:
             - name: Run Presenter integration tests
               working-directory: presenter
               run: npm run test:php
+
+            - name: Verify native and legacy Chart runtimes
+              working-directory: presenter
+              run: npm run test:chart-runtime
 
             - name: Stop WordPress
               if: always()

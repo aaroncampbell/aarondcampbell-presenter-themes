@@ -132,8 +132,49 @@ final class Plugin_Test extends Companion_Test_Case {
 		$this->assertInstanceOf( _WP_Dependency::class, $script );
 		$this->assertSame( plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ), $script->src );
 		$this->assertSame( array(), $script->deps );
-		$this->assertSame( '1.1.0', $script->ver );
+		$this->assertSame( '1.3.0', $script->ver );
 		$this->assertSame( 1, $script->extra['group'] );
+	}
+
+	/**
+	 * Presenter 2.0 receives one Chart plugin ID and a deferred bridge script.
+	 */
+	public function test_registers_the_native_chart_bridge_for_slideshows(): void {
+		$post = self::factory()->post->create_and_get(
+			array( 'post_type' => 'slideshow' )
+		);
+
+		$plugins  = $this->plugin->presenter_reveal_plugins(
+			array( 'markdown', 'math', 'chartjs', 'notes', 'math', 'chartjs' ),
+			$post
+		);
+		$repeated = $this->plugin->presenter_reveal_plugins( $plugins, $post );
+		$script   = wp_scripts()->query( 'aaron-presenter-chartjs', 'registered' );
+
+		$this->assertSame( array( 'markdown', 'notes', 'chartjs' ), $plugins );
+		$this->assertSame( $plugins, $repeated );
+		$this->assertInstanceOf( _WP_Dependency::class, $script );
+		$this->assertSame( plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ), $script->src );
+		$this->assertSame( array( 'presenter-frontend' ), $script->deps );
+		$this->assertSame( '1.3.0', $script->ver );
+		$this->assertSame( 1, $script->extra['group'] );
+		$this->assertSame( 'defer', $script->extra['strategy'] );
+		$this->assertTrue( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'RevealChartjs', 'registered' ) );
+	}
+
+	/**
+	 * The native extension filter has no effects outside slideshow routing.
+	 */
+	public function test_native_chart_bridge_ignores_non_slideshow_posts(): void {
+		$post    = self::factory()->post->create_and_get(
+			array( 'post_type' => 'post' )
+		);
+		$plugins = array( 'notes', 'chartjs', 'chartjs' );
+
+		$this->assertSame( $plugins, $this->plugin->presenter_reveal_plugins( $plugins, $post ) );
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
 	}
 
 	/**
@@ -231,7 +272,10 @@ final class Plugin_Test extends Companion_Test_Case {
 			)
 		);
 		add_post_meta( $post_id, 'stored-state-sentinel', 'unchanged' );
-		$before = $this->stored_state_snapshot();
+		$slideshow = self::factory()->post->create_and_get(
+			array( 'post_type' => 'slideshow' )
+		);
+		$before    = $this->stored_state_snapshot();
 
 		$this->assertNotEmpty( $this->plugin->add_theme_location( array( '/existing' ) ) );
 		$this->assertNotEmpty( $this->plugin->presenter_default_theme( '/default.css' ) );
@@ -239,6 +283,10 @@ final class Plugin_Test extends Companion_Test_Case {
 		$this->plugin->presenter_theme_registry( array() );
 		$this->assertSame( 'black', $this->plugin->presenter_default_theme_id( 'black', array() ) );
 		$this->plugin->presenter_reveal_js_dependencies( array( 'RevealNotes' ) );
+		$this->plugin->presenter_reveal_plugins(
+			array( 'notes' ),
+			$slideshow
+		);
 		$this->plugin->presenter_init_object( (object) array( 'controls' => true ) );
 		ob_start();
 		$this->plugin->presenter_reveal_footer();
