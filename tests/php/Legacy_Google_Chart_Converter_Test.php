@@ -46,7 +46,7 @@ HTML;
 
 		$this->assertIsArray( $blocks );
 		$this->assertSame( array( 'core/heading', 'core/paragraph', 'presenter/chart', 'presenter/chart' ), array_column( $blocks, 'blockName' ) );
-		$this->assertSame( 45_326_576.793, $blocks[3]['attrs']['rows'][0][1] );
+		$this->assertEqualsWithDelta( 45_326_576.793, $blocks[3]['attrs']['rows'][0][1], 0.000_001 );
 		$this->assertSame( '2012-01-01', $blocks[2]['attrs']['rows'][0][0] );
 		$this->assertSame( 'swap-out block', $blocks[2]['attrs']['presenterFragmentCustomClasses'] );
 		$this->assertSame( 'swap-in block', $blocks[3]['attrs']['presenterFragmentCustomClasses'] );

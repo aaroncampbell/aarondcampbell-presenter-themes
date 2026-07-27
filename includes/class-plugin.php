@@ -82,6 +82,7 @@ final class Plugin {
 
 		add_filter( 'presenter-theme-directories', array( $this, 'add_theme_location' ), 10, 2 );
 		add_action( 'presenter-reveal-footer', array( $this, 'presenter_reveal_footer' ), 10, 0 );
+		add_action( 'presenter_editor_preview_footer', array( $this, 'presenter_reveal_footer' ), 10, 0 );
 		add_filter( 'presenter-default-theme', array( $this, 'presenter_default_theme' ), 10, 1 );
 		add_filter( 'presenter-theme', array( $this, 'presenter_theme' ), 10, 1 );
 		add_filter( 'presenter_theme_registry', array( $this, 'presenter_theme_registry' ), 10, 1 );

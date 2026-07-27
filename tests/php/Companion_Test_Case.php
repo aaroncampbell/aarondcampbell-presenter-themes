@@ -80,6 +80,11 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 				'priority'      => 10,
 				'accepted_args' => 0,
 			),
+			'presenter_editor_preview_footer'  => array(
+				'method'        => 'presenter_reveal_footer',
+				'priority'      => 10,
+				'accepted_args' => 0,
+			),
 			'presenter-default-theme'          => array(
 				'method'        => 'presenter_default_theme',
 				'priority'      => 10,

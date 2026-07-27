@@ -154,7 +154,10 @@ final class Legacy_Javascript_Literal_Parser {
 				return $value;
 			}
 			if ( '\\' === $character ) {
-				$escaped = $this->source[ $this->offset++ ] ?? '';
+				if ( $this->offset >= $length ) {
+					throw new RuntimeException( 'Unterminated JavaScript escape sequence.' );
+				}
+				$escaped = $this->source[ $this->offset++ ];
 				$value  .= array(
 					'n' => "\n",
 					'r' => "\r",
