@@ -115,6 +115,11 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 				'priority'      => 10,
 				'accepted_args' => 2,
 			),
+			'presenter_migration_slide_blocks' => array(
+				'method'        => 'convert_legacy_google_charts',
+				'priority'      => 10,
+				'accepted_args' => 2,
+			),
 			'pre_get_posts'                    => array(
 				'method'        => 'hide_password_protected_slideshows',
 				'priority'      => 10,

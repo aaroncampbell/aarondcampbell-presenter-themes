@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/includes/class-plugin.php';
+require_once __DIR__ . '/includes/class-legacy-javascript-literal-parser.php';
+require_once __DIR__ . '/includes/class-legacy-google-chart-converter.php';
 
 // phpcs:disable PEAR.NamingConventions.ValidClassName.StartWithCapital -- Public compatibility facade retained for Presenter integrations.
 /**

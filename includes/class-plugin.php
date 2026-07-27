@@ -89,9 +89,21 @@ final class Plugin {
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ), 10, 1 );
 		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ), 10, 1 );
 		add_filter( 'presenter_reveal_plugins', array( $this, 'presenter_reveal_plugins' ), 10, 2 );
+		add_filter( 'presenter_migration_slide_blocks', array( $this, 'convert_legacy_google_charts' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'hide_password_protected_slideshows' ), 10, 1 );
 
 		$this->registered = true;
+	}
+
+	/**
+	 * Convert complete, recognized Google Chart slides during Presenter migration.
+	 *
+	 * @param mixed  $blocks  Earlier converter result.
+	 * @param string $content Complete legacy slide HTML.
+	 * @return mixed Converted blocks or the preceding value.
+	 */
+	public function convert_legacy_google_charts( mixed $blocks, string $content ): mixed {
+		return ( new Legacy_Google_Chart_Converter() )->convert( $blocks, $content );
 	}
 
 	/**
