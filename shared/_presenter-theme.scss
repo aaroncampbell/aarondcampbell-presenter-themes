@@ -1,0 +1,343 @@
+/**
+ * Shared Presenter-specific styles used by Aaron Purple and Aaron Brand.
+ */
+
+@mixin styles(
+	$background-color,
+	$background-image,
+	$background-size,
+	$heading-color,
+	$link-color,
+	$link-hover-color,
+	$highlight-background,
+	$highlight-text,
+	$code-background,
+	$code-text,
+	$code-keyword,
+	$code-emphasis,
+	$code-number,
+	$code-symbol,
+	$code-string,
+	$code-comment
+) {
+	// Migrated Google Charts callbacks can run before Reveal marks the hashed
+	// slide present. Keep only those slides measurable during initialization so
+	// the renderer uses their authored dimensions instead of its 400x200 fallback.
+	.reveal:not(.ready) .slides section:has(
+		script[src*='www.gstatic.com/charts/loader.js']
+	) {
+		display: block;
+	}
+
+	@font-face {
+		font-family: 'MythBusters';
+		src:
+			url('fonts/MythBusters.woff2') format('woff2'),
+			url('fonts/MythBusters.woff') format('woff'),
+			url('fonts/MythBusters.ttf') format('truetype');
+		font-display: swap;
+	}
+
+	.reveal {
+		span.myth-busted,
+		span.myth-plausible,
+		span.myth-confirmed {
+			display: block;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			padding: 0 30px;
+			transform: translate(-50%, -50%) rotate(-10deg);
+			border: 10px solid #c00;
+			background: rgba($background-color, 0.5);
+			color: #c00;
+			font-family: 'MythBusters', sans-serif;
+			font-size: 5em;
+		}
+
+		span.stamp {
+			display: block;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			padding: 0 30px;
+			transform: translate(-50%, -50%) rotate(-10deg);
+			border: 10px solid $heading-color;
+			background: rgba($background-color, 0.75);
+			color: $heading-color;
+			font-size: 5em;
+		}
+
+		.permalink {
+			display: none;
+		}
+
+		a.social-icon-link {
+			vertical-align: middle;
+			white-space: nowrap;
+
+			svg {
+				width: 1em;
+				max-width: 1em;
+				max-height: 1em;
+				vertical-align: middle;
+				fill: $link-color;
+			}
+		}
+
+		.persistent-twitter-link {
+			position: fixed;
+			z-index: 30;
+			bottom: 0;
+			left: 0;
+			padding: 10px;
+			font-size: 75%;
+
+			a:hover svg {
+				fill: $link-hover-color;
+			}
+		}
+
+		blockquote {
+			color: $heading-color;
+		}
+
+		code {
+			tab-size: 4;
+		}
+
+		.slides section {
+			img {
+				margin: 15px 0;
+				border: 0;
+				box-shadow: none;
+			}
+
+			a:hover img {
+				border-color: $link-color;
+			}
+
+			.fragment.remove-when-hidden:not(.visible) {
+				display: none;
+			}
+
+			.fragment.swap-out {
+				display: inline;
+				visibility: visible;
+				opacity: 1;
+
+				&.block {
+					display: block;
+				}
+
+				&.visible {
+					display: none;
+				}
+			}
+
+			.fragment.swap-in {
+				display: none;
+
+				&.visible {
+					display: inline;
+					visibility: visible;
+					opacity: 1;
+
+					&.block {
+						display: block;
+					}
+				}
+			}
+
+			.box-solid {
+				padding: 0.25em;
+				border-radius: 0.2em;
+				background-color: $background-color;
+				background-image: $background-image;
+				background-size: $background-size;
+			}
+
+			.fragment.always-visible.highlight,
+			.fragment.always-visible.highlight-current,
+			.fragment.always-visible.highlight-text,
+			.fragment.always-visible.highlight-current-text,
+			.fragment.always-visible.highlight-bold,
+			.fragment.always-visible.highlight-current-bold {
+				visibility: inherit;
+				opacity: 1;
+			}
+
+			.highlight,
+			.fragment.highlight.visible,
+			.fragment.highlight-current.current-fragment {
+				background: rgba($highlight-background, 0.7);
+			}
+
+			.highlight-text,
+			.fragment.highlight-text.visible,
+			.fragment.highlight-current-text.current-fragment {
+				color: $highlight-text;
+			}
+
+			.highlight-bold,
+			.fragment.highlight-bold.visible,
+			.fragment.highlight-current-bold.current-fragment {
+				font-weight: bold;
+			}
+
+			.dark {
+				background-color: rgba(0, 0, 0, 0.75);
+			}
+
+			.light {
+				background-color: rgba(255, 255, 255, 0.75);
+			}
+
+			.columns,
+			ul.columns {
+				display: grid;
+				gap: 1em;
+
+				&.two {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+
+				&.three {
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+				}
+
+				&.four {
+					grid-template-columns: repeat(4, minmax(0, 1fr));
+				}
+
+				li {
+					height: auto;
+				}
+			}
+		}
+
+		.gallery-item {
+			display: inline-block;
+			width: 100%;
+			text-align: center;
+			vertical-align: top;
+		}
+
+		@for $columns from 2 through 9 {
+			.gallery-columns-#{$columns} .gallery-item {
+				max-width: calc(100% / $columns);
+			}
+		}
+
+		.gallery-caption {
+			display: block;
+		}
+	}
+
+	.dark-box-twitter .persistent-twitter-link {
+		background-color: rgba(0, 0, 0, 0.7);
+	}
+
+	.box-twitter .persistent-twitter-link {
+		border-radius: 0.2em;
+		background-color: $background-color;
+		background-image: $background-image;
+		background-size: $background-size;
+	}
+
+	.hide-twitter .persistent-twitter-link {
+		display: none;
+	}
+
+	.rotate-twitter .persistent-twitter-link {
+		margin-left: 0.5em;
+		transform: rotate(-90deg);
+		transform-origin: 0.5em 50%;
+	}
+
+	.hljs {
+		display: block;
+		overflow-x: auto;
+		padding: 0.5em;
+		background: $code-background;
+		color: $code-text;
+	}
+
+	.hljs-tag,
+	.hljs-keyword,
+	.hljs-selector-tag,
+	.hljs-literal,
+	.hljs-strong,
+	.hljs-name {
+		color: $code-keyword;
+	}
+
+	.hljs-selector-class,
+	.hljs-class .hljs-title {
+		color: $code-emphasis;
+	}
+
+	.hljs-number {
+		color: $code-number;
+	}
+
+	.hljs-code {
+		color: $code-symbol;
+	}
+
+	.hljs-attribute,
+	.hljs-symbol,
+	.hljs-regexp,
+	.hljs-link {
+		color: $code-symbol;
+	}
+
+	.hljs-string,
+	.hljs-bullet,
+	.hljs-subst,
+	.hljs-title,
+	.hljs-section,
+	.hljs-emphasis,
+	.hljs-type,
+	.hljs-built_in,
+	.hljs-builtin-name,
+	.hljs-selector-attr,
+	.hljs-selector-pseudo,
+	.hljs-addition,
+	.hljs-variable,
+	.hljs-template-tag,
+	.hljs-template-variable {
+		color: $code-string;
+	}
+
+	.hljs-comment,
+	.hljs-quote,
+	.hljs-deletion,
+	.hljs-meta {
+		color: $code-comment;
+	}
+
+	.hljs-keyword,
+	.hljs-selector-tag,
+	.hljs-literal,
+	.hljs-doctag,
+	.hljs-title,
+	.hljs-section,
+	.hljs-type,
+	.hljs-selector-id {
+		font-weight: bold;
+	}
+
+	@media screen and (max-width: 699px) {
+		.reveal p.persistent-twitter-link {
+			display: none;
+		}
+
+		.reveal .slides section {
+			.columns,
+			ul.columns {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+}

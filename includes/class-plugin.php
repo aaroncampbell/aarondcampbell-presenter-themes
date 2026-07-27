@@ -28,6 +28,15 @@ final class Plugin {
 	/** Theme stylesheet relative to this plugin. */
 	private const THEME_STYLESHEET = 'aaron-purple/aaron-purple.css';
 
+	/** Stable Aaron Brand theme identifier shared with Presenter. */
+	private const BRAND_THEME_ID = 'aaron-brand';
+
+	/** Human-readable Aaron Brand theme label. */
+	private const BRAND_THEME_LABEL = 'Aaron Brand';
+
+	/** Aaron Brand stylesheet relative to this plugin. */
+	private const BRAND_THEME_STYLESHEET = 'aaron-brand/aaron-brand.css';
+
 	/** Legacy Reveal plugin script handle. */
 	private const CHART_SCRIPT_HANDLE = 'RevealChartjs';
 
@@ -116,7 +125,7 @@ final class Plugin {
 	}
 
 	/**
-	 * Register Aaron Purple with Presenter 2.0's stable theme registry.
+	 * Register Aaron's themes with Presenter 2.0's stable theme registry.
 	 *
 	 * @param array<string, object> $themes Presenter themes keyed by stable ID.
 	 * @return array<string, object> Filtered Presenter themes.
@@ -137,6 +146,14 @@ final class Plugin {
 		);
 
 		$themes[ $theme->id() ] = $theme;
+
+		$brand_theme = new Theme(
+			self::BRAND_THEME_ID,
+			self::BRAND_THEME_LABEL,
+			plugins_url( self::BRAND_THEME_STYLESHEET, $this->plugin_file )
+		);
+
+		$themes[ $brand_theme->id() ] = $brand_theme;
 
 		return $themes;
 	}

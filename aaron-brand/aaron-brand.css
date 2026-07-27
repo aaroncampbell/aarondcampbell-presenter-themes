@@ -1,35 +1,37 @@
 /**
- * Aaron Purple theme for reveal.js.
+ * Aaron Brand theme for reveal.js.
+ *
+ * Values and assets are sourced from the aaron-brand design system.
  */
 /**
  * Shared Presenter-specific styles used by Aaron Purple and Aaron Brand.
  */
 :root {
-  --r-background: url("images/asanoha-400px.png") repeat;
-  --r-background-color: #d6d1f7;
+  --r-background: url("images/aarondcampbell-pattern-05opacity.plain.svg") repeat;
+  --r-background-color: #f1ecfc;
   --r-main-font: 'Open Sans', Arial, sans-serif;
   --r-main-font-size: 36px;
-  --r-main-color: rgba(0, 0, 0, 0.5);
+  --r-main-color: #111;
   --r-block-margin: 20px;
   --r-heading-margin: 0 0 20px 0;
-  --r-heading-font: 'Open Sans', Arial, sans-serif;
-  --r-heading-color: #8377d1;
-  --r-heading-line-height: 1em;
-  --r-heading-letter-spacing: -2px;
+  --r-heading-font: 'Poppins', 'Open Sans', Arial, sans-serif;
+  --r-heading-color: #5e527a;
+  --r-heading-line-height: 1.1;
+  --r-heading-letter-spacing: -1px;
   --r-heading-text-transform: none;
   --r-heading-text-shadow: none;
-  --r-heading-font-weight: normal;
+  --r-heading-font-weight: 600;
   --r-heading1-text-shadow: none;
   --r-heading1-size: 3.77em;
   --r-heading2-size: 2.11em;
   --r-heading3-size: 1.55em;
   --r-heading4-size: 1em;
-  --r-code-font: monospace;
-  --r-link-color: #6254b8;
-  --r-link-color-dark: #433887;
-  --r-link-color-hover: #71e9f4;
-  --r-selection-background-color: #ada7c9;
-  --r-selection-color: #fff;
+  --r-code-font: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --r-link-color: #7051b8;
+  --r-link-color-dark: #4e3a8c;
+  --r-link-color-hover: #5e527a;
+  --r-selection-background-color: #dcd1f7;
+  --r-selection-color: #111;
   --r-overlay-element-bg-color: 255, 255, 255;
   --r-overlay-element-fg-color: 17, 17, 17;
 }
@@ -355,6 +357,34 @@
   }
 }
 @font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-ExtraBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
   font-family: "Open Sans";
   src: url("fonts/OpenSans-Regular.ttf") format("truetype");
   font-style: normal;
@@ -421,7 +451,7 @@ section.has-dark-background h6 {
   padding: 0 30px;
   transform: translate(-50%, -50%) rotate(-10deg);
   border: 10px solid #c00;
-  background: rgba(214, 209, 247, 0.5);
+  background: rgba(241, 236, 252, 0.5);
   color: #c00;
   font-family: "MythBusters", sans-serif;
   font-size: 5em;
@@ -433,9 +463,9 @@ section.has-dark-background h6 {
   left: 50%;
   padding: 0 30px;
   transform: translate(-50%, -50%) rotate(-10deg);
-  border: 10px solid #8377d1;
-  background: rgba(214, 209, 247, 0.75);
-  color: #8377d1;
+  border: 10px solid #5e527a;
+  background: rgba(241, 236, 252, 0.75);
+  color: #5e527a;
   font-size: 5em;
 }
 .reveal .permalink {
@@ -450,7 +480,7 @@ section.has-dark-background h6 {
   max-width: 1em;
   max-height: 1em;
   vertical-align: middle;
-  fill: #6254b8;
+  fill: #7051b8;
 }
 .reveal .persistent-twitter-link {
   position: fixed;
@@ -461,10 +491,10 @@ section.has-dark-background h6 {
   font-size: 75%;
 }
 .reveal .persistent-twitter-link a:hover svg {
-  fill: #71e9f4;
+  fill: #5e527a;
 }
 .reveal blockquote {
-  color: #8377d1;
+  color: #5e527a;
 }
 .reveal code {
   tab-size: 4;
@@ -475,7 +505,7 @@ section.has-dark-background h6 {
   box-shadow: none;
 }
 .reveal .slides section a:hover img {
-  border-color: #6254b8;
+  border-color: #7051b8;
 }
 .reveal .slides section .fragment.remove-when-hidden:not(.visible) {
   display: none;
@@ -505,9 +535,9 @@ section.has-dark-background h6 {
 .reveal .slides section .box-solid {
   padding: 0.25em;
   border-radius: 0.2em;
-  background-color: #d6d1f7;
-  background-image: url("images/asanoha-400px.png");
-  background-size: auto;
+  background-color: #f1ecfc;
+  background-image: url("images/aarondcampbell-pattern-05opacity.plain.svg");
+  background-size: 104px 180px;
 }
 .reveal .slides section .fragment.always-visible.highlight,
 .reveal .slides section .fragment.always-visible.highlight-current,
@@ -521,12 +551,12 @@ section.has-dark-background h6 {
 .reveal .slides section .highlight,
 .reveal .slides section .fragment.highlight.visible,
 .reveal .slides section .fragment.highlight-current.current-fragment {
-  background: rgba(214, 209, 247, 0.7);
+  background: rgba(220, 209, 247, 0.7);
 }
 .reveal .slides section .highlight-text,
 .reveal .slides section .fragment.highlight-text.visible,
 .reveal .slides section .fragment.highlight-current-text.current-fragment {
-  color: #8377d1;
+  color: #7051b8;
 }
 .reveal .slides section .highlight-bold,
 .reveal .slides section .fragment.highlight-bold.visible,
@@ -600,9 +630,9 @@ section.has-dark-background h6 {
 
 .box-twitter .persistent-twitter-link {
   border-radius: 0.2em;
-  background-color: #d6d1f7;
-  background-image: url("images/asanoha-400px.png");
-  background-size: auto;
+  background-color: #f1ecfc;
+  background-image: url("images/aarondcampbell-pattern-05opacity.plain.svg");
+  background-size: 104px 180px;
 }
 
 .hide-twitter .persistent-twitter-link {
@@ -619,8 +649,8 @@ section.has-dark-background h6 {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #5a5475;
-  color: #f8f8f2;
+  background: #5e527a;
+  color: #fff;
 }
 
 .hljs-tag,
@@ -629,27 +659,27 @@ section.has-dark-background h6 {
 .hljs-literal,
 .hljs-strong,
 .hljs-name {
-  color: #ffb8d1;
+  color: #d9a7d0;
 }
 
 .hljs-selector-class,
 .hljs-class .hljs-title {
-  color: #fff352;
+  color: #f1e5a8;
 }
 
 .hljs-number {
-  color: #c5a3ff;
+  color: #dcd1f7;
 }
 
 .hljs-code {
-  color: #c2ffdf;
+  color: #a8c7d8;
 }
 
 .hljs-attribute,
 .hljs-symbol,
 .hljs-regexp,
 .hljs-link {
-  color: #c2ffdf;
+  color: #a8c7d8;
 }
 
 .hljs-string,
@@ -667,14 +697,14 @@ section.has-dark-background h6 {
 .hljs-variable,
 .hljs-template-tag,
 .hljs-template-variable {
-  color: #ffea00;
+  color: #f1e5a8;
 }
 
 .hljs-comment,
 .hljs-quote,
 .hljs-deletion,
 .hljs-meta {
-  color: #e6c000;
+  color: #dcd1f7;
 }
 
 .hljs-keyword,
@@ -696,4 +726,29 @@ section.has-dark-background h6 {
   .reveal .slides section ul.columns {
     grid-template-columns: 1fr;
   }
+}
+.reveal-viewport {
+  background-size: 104px 180px;
+}
+
+.reveal .progress {
+  background: #e7e5ea;
+  color: #5e527a;
+}
+.reveal .aaron-brand-mark {
+  display: inline-block;
+  width: 3em;
+  height: 2.3em;
+  background: url("images/fedora-plum.svg") center/contain no-repeat;
+  vertical-align: middle;
+}
+.reveal .has-dark-background .aaron-brand-mark {
+  background-image: url("images/fedora-purple.svg");
+}
+.reveal .text-muted {
+  color: #595959;
+}
+.reveal .focus-ring {
+  outline: 3px solid #9277d1;
+  outline-offset: 3px;
 }

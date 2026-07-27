@@ -1,316 +1,89 @@
 /**
- * Template Name: Aaron-Purple
+ * Aaron Purple theme for reveal.js.
  */
 
+@use 'template/mixins' as reveal-mixins;
+@use '../../shared/presenter-theme' as presenter-theme;
 
-// Default mixins, settings, and theme - copied from reveal.js
-@import "mixins";
-@import "settings";
-// ---------------------------------------------
+$background-color: #d6d1f7;
+$background-image: url('images/asanoha-400px.png');
+$heading-color: #8377d1;
+$link-color: #6254b8;
+$link-color-dark: #433887;
+$link-color-hover: #71e9f4;
 
-/**
- * My colors & settings (overrides for reveal.js theme defaults)
- */
-$color-primary-0: #8377D1;  // Main Primary color */
-$color-primary-1: #D6D1F7;
-$color-primary-2: #ABA1E6;
-$color-primary-3: #6254B8;
-$color-primary-4: #4739A2;
+@use 'template/settings' with (
+	$background: $background-image repeat,
+	$background-color: $background-color,
+	$main-font: "'Open Sans', Arial, sans-serif",
+	$main-font-size: 36px,
+	$main-color: rgba(0, 0, 0, 0.5),
+	$heading-font: "'Open Sans', Arial, sans-serif",
+	$heading-color: $heading-color,
+	$heading-line-height: 1em,
+	$heading-letter-spacing: -2px,
+	$heading-text-transform: none,
+	$link-color: $link-color,
+	$link-color-dark: $link-color-dark,
+	$link-color-hover: $link-color-hover,
+	$selection-background-color: #ada7c9,
+	$selection-color: #fff,
+	$overlay-element-bg-color: (255, 255, 255),
+	$overlay-element-fg-color: (17, 17, 17)
+);
 
-// Background of the presentation
-$backgroundColor: #D6D1F7;
-
-// Primary/body text
-$mainFont: 'Open Sans', sans-serif;
-$mainFontSize: 36px;
-$mainColor: rgba(0,0,0,.5);
-
-// Headings
-$headingFont: 'Open Sans', sans-serif;
-$headingColor: #8377D1;
-$headingLineHeight: 1em;
-$headingLetterSpacing: -2px;
-$headingTextTransform: none;
-
-// Links and actions
-$linkColor: #6254B8;
-
-// Text selection
-$selectionBackgroundColor: #ADA7C9;
-
-@mixin bodyBackground() {
-	background-image: url("images/asanoha-400px.png");
-}
-
-/**
- * End My colors & settings
- */
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,300,700);
+@use 'template/theme';
 
 @font-face {
-	font-family: 'MythBusters';
-	src: url( 'fonts/MythBusters.woff2' ) format( 'woff2' ),
-		 url( 'fonts/MythBusters.woff' ) format( 'woff' ),
-		 url( 'fonts/MythBusters.ttf' ) format( 'truetype' );
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
 }
 
-.reveal {
-	span.myth-busted,
-	span.myth-plausible,
-	span.myth-confirmed {
-		display: block;
-		font-family: 'MythBusters';
-		font-size: 5em;
-		color: #C00;
-		border: 10px solid #C00;
-		padding: 0 30px;
-		background: rgba( $backgroundColor, .5 );
-		/* Center it */
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) rotate(-10deg);
-	}
-	span.stamp {
-		display: block;
-		font-size: 5em;
-		color: $headingColor;
-		border: 10px solid $headingColor;
-		padding: 0 30px;
-		background: rgba( $backgroundColor, .75 );
-		/* Center it */
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) rotate(-10deg);
-	}
-	.permalink {
-		display: none;
-	}
-	a.social-icon-link {
-		vertical-align: middle;
-		white-space: nowrap;
-		svg {
-			vertical-align:middle;
-			max-height: 1em;
-			max-width: 1em;
-			width: 1em;
-			fill: $linkColor;
-		}
-	}
-	.persistent-twitter-link {
-		font-size: 75%;
-		left: 0;
-		bottom: 0;
-		padding: 10px;
-		position: fixed;
-		z-index: 30;
-
-		a:hover svg {
-			fill: $linkColorHover;
-		}
-	}
-
-	blockquote {
-		color: $headingColor;
-	}
-
-	code {
-		tab-size: 4;
-	}
-
-	.slides section {
-		img {
-			border: 0;
-			box-shadow: none;
-			margin: 15px 0px;
-		}
-
-		a:hover img {
-			border-color: $linkColor;
-		}
-
-		.fragment.remove-when-hidden:not(.visible) {
-			display:none;
-		}
-
-		.fragment.swap-out {
-			display: inline;
-			visibility: visible;
-			opacity: 1;
-
-			&.block {
-				display:block;
-			}
-
-			&.visible {
-				display: none;
-			}
-		}
-
-		.fragment.swap-in {
-			display: none;
-
-			&.visible {
-				display: inline;
-				visibility: visible;
-				opacity: 1;
-
-				&.block {
-					display: block;
-				}
-			}
-		}
-
-		.box-solid {
-			@include bodyBackground();
-			border-radius: 0.2em;
-			padding:.25em;
-		}
-
-		/**
-		 * Highlights
-		 *
-		 * Make sure to add new highlight classes here to make sure they inherit visibility from parent,
-		 * Then add new section below
-		 */
-		.fragment.always-visible.highlight,
-		.fragment.always-visible.highlight-current,
-		.fragment.always-visible.highlight-text,
-		.fragment.always-visible.highlight-current-text,
-		.fragment.always-visible.highlight-bold,
-		.fragment.always-visible.highlight-current-bold {
-			opacity: 1;
-			visibility: inherit;
-		}
-
-		.highlight,
-		.fragment.highlight.visible,
-		.fragment.highlight-current.current-fragment {
-			background: rgba($color-primary-1, 0.7);
-		}
-		.highlight-text,
-		.fragment.highlight-text.visible,
-		.fragment.highlight-current-text.current-fragment {
-			color: $color-primary-0;
-		}
-		.highlight-bold,
-		.fragment.highlight-bold.visible,
-		.fragment.highlight-current-bold.current-fragment {
-			font-weight: bold;
-		}
-		/**
-		 * End Highlights
-		 */
-
-		.dark {
-			background-color: rgba(0, 0, 0, 0.75);
-		}
-
-		.light {
-			background-color: rgba(255, 255, 255, 0.75);
-		}
-
-		/* Columns */
-		.columns,
-		ul.columns {
-			display:grid;
-			grid-column-gap: 1em;
-
-			&.two {
-				grid-template-columns: 50% 50%;
-			}
-
-			&.three {
-				grid-template-columns: 33% 34% 33%;
-			}
-
-			&.four {
-				grid-template-columns: 25% 25% 25% 25%;
-			}
-
-			li {
-				height: auto;
-			}
-		}
-	}
-
-	/**
-	 * Galleries
-	 */
-	.gallery-item {
-		display: inline-block;
-		text-align: center;
-		vertical-align: top;
-		width: 100%;
-	}
-	.gallery-columns-2 .gallery-item {
-		max-width: 50%;
-	}
-	.gallery-columns-3 .gallery-item {
-		max-width: 33.33%;
-	}
-	.gallery-columns-4 .gallery-item {
-		max-width: 25%;
-	}
-	.gallery-columns-5 .gallery-item {
-		max-width: 20%;
-	}
-	.gallery-columns-6 .gallery-item {
-		max-width: 16.66%;
-	}
-	.gallery-columns-7 .gallery-item {
-		max-width: 14.28%;
-	}
-	.gallery-columns-8 .gallery-item {
-		max-width: 12.5%;
-	}
-	.gallery-columns-9 .gallery-item {
-		max-width: 11.11%;
-	}
-
-	.gallery-caption {
-		display: block;
-	}
-	/**
-	 * End Galleries
-	 */
-}
-.dark-box-twitter {
-	.persistent-twitter-link {
-		background-color: rgba(0, 0, 0, 0.7);
-	}
-}
-.box-twitter {
-	.persistent-twitter-link {
-		@include bodyBackground();
-		border-radius: 0.2em;
-	}
-}
-.hide-twitter {
-	.persistent-twitter-link {
-		display:none;
-	}
-}
-.rotate-twitter {
-	.persistent-twitter-link {
-		@include transform-origin(.5em, 50%);
-		@include rotate();
-		margin-left: 0.5em;
-	}
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Italic.ttf') format('truetype');
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
 }
 
-@media screen and (max-width: 699px) {
-	.reveal {
-		p.persistent-twitter-link {
-			display:none;
-		}
-	}
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-SemiBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
 }
 
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Bold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
 
-// Code Highlight ------------------------------
-@import "highlight";
-// ---------------------------------------------
-@import "theme";
+@include reveal-mixins.light-bg-text-color(#111);
+@include reveal-mixins.dark-bg-text-color(#fff);
+
+@include presenter-theme.styles(
+	$background-color: $background-color,
+	$background-image: $background-image,
+	$background-size: auto,
+	$heading-color: $heading-color,
+	$link-color: $link-color,
+	$link-hover-color: $link-color-hover,
+	$highlight-background: #d6d1f7,
+	$highlight-text: #8377d1,
+	$code-background: #5a5475,
+	$code-text: #f8f8f2,
+	$code-keyword: #ffb8d1,
+	$code-emphasis: #fff352,
+	$code-number: #c5a3ff,
+	$code-symbol: #c2ffdf,
+	$code-string: #ffea00,
+	$code-comment: #e6c000
+);

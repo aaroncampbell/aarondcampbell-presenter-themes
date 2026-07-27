@@ -38,8 +38,8 @@ lint and formatting standards through Presenter's pinned development
 toolchain. The JavaScript is shipped directly; there is no bundler or generated
 JavaScript output.
 
-The theme CSS is generated from the Sass sources with the exact Dart Sass
-version in `package-lock.json`:
+The theme CSS is generated from the Sass sources with the exact Dart Sass and
+Reveal.js versions in `package-lock.json`:
 
 ```sh
 npm run build:css
@@ -48,9 +48,38 @@ npm run check:css
 
 Commit the generated CSS with its source changes. Source maps are intentionally
 disabled: release packages exclude the Sass source, so shipping maps would not
-provide usable debugging context. The current compatibility compiler preserves
-the historical CSS output. Migrating the source from Sass `@import` and legacy
-color helpers is a separate, visually reviewed change.
+provide usable debugging context. The compiler resolves Reveal's theme modules
+from the pinned `reveal.js` development dependency, keeping the custom themes
+on the same theme API as Presenter without copying upstream template files.
+
+The plugin ships three themes:
+
+- `aaron`, the original dark Aaron theme, ported to Reveal.js 6
+- `aaron-purple`, the existing site default, ported to Reveal.js 6 while
+  preserving its presentation-specific utilities
+- `aaron-brand`, the current brand-system variant using the approved Poppins
+  and Open Sans fonts, semantic colors, pattern, and fedora artwork from the
+  adjacent `aaron-brand` repository
+
+Aaron Purple remains the default so existing presentations do not change
+themes implicitly. Aaron Brand is available as a separate stable theme ID.
+
+## AaronDCampbell.com local site
+
+The local site's Compose configuration bind-mounts this checkout and the
+adjacent Presenter checkout over the plugin copies in its persistent
+`wp-content` volume. To update both plugins after pulling:
+
+```sh
+npm --prefix ../presenter ci
+npm --prefix ../presenter run build
+npm ci
+npm run build
+docker compose -f ../local-site/compose.yaml up -d
+```
+
+The first install may be slow while npm populates its cache. Later builds use
+the same mounted paths; no plugin copying or WordPress volume reset is needed.
 
 The integration tests use Presenter's shared `wp-env` WordPress installation.
 In the adjacent `presenter` repository, copy `.wp-env.override.example.json` to

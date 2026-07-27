@@ -1,93 +1,166 @@
 /**
- * Template Name: Aaron D. Campbell
+ * Aaron D. Campbell theme for reveal.js.
  */
 
+@use 'sass:color';
+@use 'template/mixins' as reveal-mixins;
 
-// Default mixins and settings -----------------
-@import "mixins";
-@import "settings";
-// ---------------------------------------------
+$background-color: #2a2f33;
+$main-color: #fff;
+$heading-color: #d7f0fc;
+$link-color: #48b5f0;
+$link-color-hover: color.adjust($link-color, $lightness: 20%);
+$link-color-dark: color.adjust($link-color, $lightness: -15%);
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,300,700);
+@use 'template/settings' with (
+	$background: $background-color,
+	$background-color: $background-color,
+	$main-font: "'Open Sans', Arial, sans-serif",
+	$main-font-size: 36px,
+	$main-color: $main-color,
+	$heading-font: "'Open Sans', Arial, sans-serif",
+	$heading-color: $heading-color,
+	$heading-line-height: 1em,
+	$heading-letter-spacing: -2px,
+	$heading-text-transform: none,
+	$link-color: $link-color,
+	$link-color-dark: $link-color-dark,
+	$link-color-hover: $link-color-hover,
+	$selection-background-color: #ff5e99,
+	$selection-color: #fff,
+	$overlay-element-bg-color: (0, 0, 0),
+	$overlay-element-fg-color: (240, 240, 240)
+);
 
-// Background generator
-@mixin bodyBackground() {}
+@use 'template/theme';
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Italic.ttf') format('truetype');
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-SemiBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Bold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+@include reveal-mixins.light-bg-text-color(#111);
+@include reveal-mixins.dark-bg-text-color(#fff);
 
 .reveal {
-	.permalink {
-		display:none;
+	h1 em,
+	h2 em,
+	h3 em,
+	h4 em,
+	h5 em,
+	h6 em {
+		color: $link-color;
 	}
+
+	.permalink {
+		display: none;
+	}
+
 	.persistent-twitter-link {
-		background-color: rgba($backgroundColor, 0.7);
-		font-size: 75%;
-		left: 0;
-		bottom: 0;
-		padding:10px;
 		position: fixed;
 		z-index: 30;
+		bottom: 0;
+		left: 0;
+		padding: 10px;
+		background-color: rgba($background-color, 0.7);
+		font-size: 75%;
 
 		svg {
-			max-height: 1em;
 			max-width: 1em;
-			fill: $linkColor;
+			max-height: 1em;
+			fill: $link-color;
 		}
 
 		a:hover svg {
-			fill: $linkColorHover;
+			fill: $link-color-hover;
 		}
 	}
-}
-.dark-box-twitter {
-	.persistent-twitter-link {
-		background-color: rgba(0, 0, 0, 0.7);
+
+	section img:not(.plain, .r-frame) {
+		border: 4px solid $main-color;
+		background: rgba(255, 255, 255, 0.12);
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+	}
+
+	a:hover img:not(.plain) {
+		border-color: $link-color;
+		background: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
 	}
 }
-.box-twitter {
-	.persistent-twitter-link {
-		@include bodyBackground();
-		border-radius: 0.2em;
-	}
+
+.dark-box-twitter .persistent-twitter-link {
+	background-color: rgba(0, 0, 0, 0.7);
 }
-.hide-twitter {
-	.persistent-twitter-link {
-		display:none;
-	}
+
+.box-twitter .persistent-twitter-link {
+	border-radius: 0.2em;
+	background: $background-color;
 }
-.rotate-twitter {
-	.persistent-twitter-link {
-		@include transform-origin(.5em, 50%);
-		@include rotate();
-		margin-left: 0.5em;
-	}
+
+.hide-twitter .persistent-twitter-link {
+	display: none;
 }
+
+.rotate-twitter .persistent-twitter-link {
+	margin-left: 0.5em;
+	transform: rotate(-90deg);
+	transform-origin: 0.5em 50%;
+}
+
 .cols {
-	-moz-column-gap: 2em;
-	-webkit-column-gap: 2em;
 	column-gap: 2em;
 
 	&.two {
-		-moz-column-count: 2;
-		-webkit-column-count: 2;
 		column-count: 2;
 	}
 
 	&.three {
-		-moz-column-count: 3;
-		-webkit-column-count: 3;
 		column-count: 3;
 	}
-
 }
+
 ul.cols {
-	-moz-column-count: 3;
-	-webkit-column-gap: 3em;
+	column-count: 3;
 	column-gap: 3em;
 
 	li {
-		display:list-item;
+		display: list-item;
 	}
 }
 
-// Theme template ------------------------------
-@import "theme";
-// ---------------------------------------------
+@media screen and (max-width: 699px) {
+	.cols,
+	.cols.two,
+	.cols.three,
+	ul.cols {
+		column-count: 1;
+	}
+}

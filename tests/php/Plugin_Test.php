@@ -65,7 +65,7 @@ final class Plugin_Test extends Companion_Test_Case {
 	}
 
 	/**
-	 * Aaron Purple is registered under one stable ID with both historical aliases.
+	 * Both themes are registered, with Aaron Purple retaining historical aliases and the default.
 	 */
 	public function test_registers_stable_theme_default_and_aliases(): void {
 		if ( ! class_exists( Theme::class ) ) {
@@ -90,6 +90,14 @@ final class Plugin_Test extends Companion_Test_Case {
 			),
 			$themes['aaron-purple']->legacy_aliases()
 		);
+		$this->assertArrayHasKey( 'aaron-brand', $themes );
+		$this->assertSame( 'aaron-brand', $themes['aaron-brand']->id() );
+		$this->assertSame( 'Aaron Brand', $themes['aaron-brand']->label() );
+		$this->assertSame(
+			plugins_url( 'aaron-brand/aaron-brand.css', $this->plugin_file ),
+			$themes['aaron-brand']->stylesheet_url()
+		);
+		$this->assertSame( array(), $themes['aaron-brand']->legacy_aliases() );
 		$this->assertSame(
 			'aaron-purple',
 			$this->plugin->presenter_default_theme_id( 'black', $themes )

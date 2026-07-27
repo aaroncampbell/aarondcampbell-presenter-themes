@@ -1,0 +1,164 @@
+/**
+ * Aaron Brand theme for reveal.js.
+ *
+ * Values and assets are sourced from the aaron-brand design system.
+ */
+
+@use 'template/mixins' as reveal-mixins;
+@use '../../shared/presenter-theme' as presenter-theme;
+
+$brand-violet: #7051b8;
+$light-violet: #9277d1;
+$plum: #5e527a;
+$violet-tint: #dcd1f7;
+$violet-wash: #f1ecfc;
+$ink: #111;
+$graphite: #595959;
+$white: #fff;
+$soft-pink: #d9a7d0;
+$muted-blue: #a8c7d8;
+$warm-cream: #f1e5a8;
+$action-active: #4e3a8c;
+$background-image: url('images/aarondcampbell-pattern-05opacity.plain.svg');
+
+@use 'template/settings' with (
+	$background: $background-image repeat,
+	$background-color: $violet-wash,
+	$main-font: "'Open Sans', Arial, sans-serif",
+	$main-font-size: 36px,
+	$main-color: $ink,
+	$heading-font: "'Poppins', 'Open Sans', Arial, sans-serif",
+	$heading-color: $plum,
+	$heading-line-height: 1.1,
+	$heading-letter-spacing: -1px,
+	$heading-text-transform: none,
+	$heading-font-weight: 600,
+	$code-font: 'ui-monospace, SFMono-Regular, Consolas, monospace',
+	$link-color: $brand-violet,
+	$link-color-dark: $action-active,
+	$link-color-hover: $plum,
+	$selection-background-color: $violet-tint,
+	$selection-color: $ink,
+	$overlay-element-bg-color: (255, 255, 255),
+	$overlay-element-fg-color: (17, 17, 17)
+);
+
+@use 'template/theme';
+
+@font-face {
+	font-family: 'Poppins';
+	src: url('fonts/Poppins-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	src: url('fonts/Poppins-Medium.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	src: url('fonts/Poppins-SemiBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	src: url('fonts/Poppins-ExtraBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 800;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Italic.ttf') format('truetype');
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-SemiBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('fonts/OpenSans-Bold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+@include reveal-mixins.light-bg-text-color($ink);
+@include reveal-mixins.dark-bg-text-color($white);
+
+@include presenter-theme.styles(
+	$background-color: $violet-wash,
+	$background-image: $background-image,
+	$background-size: 104px 180px,
+	$heading-color: $plum,
+	$link-color: $brand-violet,
+	$link-hover-color: $plum,
+	$highlight-background: $violet-tint,
+	$highlight-text: $brand-violet,
+	$code-background: $plum,
+	$code-text: $white,
+	$code-keyword: $soft-pink,
+	$code-emphasis: $warm-cream,
+	$code-number: $violet-tint,
+	$code-symbol: $muted-blue,
+	$code-string: $warm-cream,
+	$code-comment: $violet-tint
+);
+
+.reveal-viewport {
+	background-size: 104px 180px;
+}
+
+.reveal {
+	.progress {
+		background: #e7e5ea;
+		color: $plum;
+	}
+
+	.aaron-brand-mark {
+		display: inline-block;
+		width: 3em;
+		height: 2.3em;
+		background: url('images/fedora-plum.svg') center / contain no-repeat;
+		vertical-align: middle;
+	}
+
+	.has-dark-background .aaron-brand-mark {
+		background-image: url('images/fedora-purple.svg');
+	}
+
+	.text-muted {
+		color: $graphite;
+	}
+
+	.focus-ring {
+		outline: 3px solid $light-violet;
+		outline-offset: 3px;
+	}
+}

@@ -10,6 +10,10 @@ import { fileURLToPath } from 'node:url';
 import * as sass from 'sass';
 
 const rootDirectory = fileURLToPath( new URL( '../', import.meta.url ) );
+const revealThemeDirectory = resolve(
+	rootDirectory,
+	'node_modules/reveal.js/css/theme'
+);
 const mode = process.argv[ 2 ];
 
 const themes = [
@@ -22,6 +26,11 @@ const themes = [
 		name: 'Aaron Purple',
 		input: 'aaron-purple/scss/aaron-purple.scss',
 		output: 'aaron-purple/aaron-purple.css',
+	},
+	{
+		name: 'Aaron Brand',
+		input: 'aaron-brand/scss/aaron-brand.scss',
+		output: 'aaron-brand/aaron-brand.css',
 	},
 ];
 
@@ -38,7 +47,10 @@ async function processThemes() {
 	for ( const theme of themes ) {
 		const inputPath = resolve( rootDirectory, theme.input );
 		const outputPath = resolve( rootDirectory, theme.output );
-		const result = sass.compile( inputPath, { style: 'expanded' } );
+		const result = sass.compile( inputPath, {
+			loadPaths: [ revealThemeDirectory ],
+			style: 'expanded',
+		} );
 		const css = `${ result.css }\n`;
 
 		if ( mode === 'build' ) {
