@@ -185,10 +185,32 @@ final class Legacy_Javascript_Literal_Parser {
 		return $match[0];
 	}
 
-	/** Advance over insignificant whitespace. */
+	/**
+	 * Advance over insignificant whitespace and comments.
+	 *
+	 * @throws RuntimeException For an unterminated block comment.
+	 */
 	private function whitespace(): void {
-		while ( isset( $this->source[ $this->offset ] ) && preg_match( '/\s/', $this->source[ $this->offset ] ) ) {
-			++$this->offset;
+		$length = strlen( $this->source );
+		while ( $this->offset < $length ) {
+			if ( preg_match( '/\s/', $this->source[ $this->offset ] ) ) {
+				++$this->offset;
+				continue;
+			}
+			if ( '//' === substr( $this->source, $this->offset, 2 ) ) {
+				$newline      = strpos( $this->source, "\n", $this->offset + 2 );
+				$this->offset = false === $newline ? $length : $newline + 1;
+				continue;
+			}
+			if ( '/*' === substr( $this->source, $this->offset, 2 ) ) {
+				$closing = strpos( $this->source, '*/', $this->offset + 2 );
+				if ( false === $closing ) {
+					throw new RuntimeException( 'Unterminated JavaScript comment.' );
+				}
+				$this->offset = $closing + 2;
+				continue;
+			}
+			break;
 		}
 	}
 

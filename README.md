@@ -136,6 +136,9 @@ same object, registers it as the `chartjs` Presenter Reveal plugin before
 initialization, and includes that ID in the native Reveal configuration. The
 authored graph and dataset global contract is identical in both runtimes.
 
-Inline Chart.js CDN markup and historical Google Charts markup found in old
-decks are separate concerns; this plugin neither supplies nor rewrites those
-external libraries.
+The migration integration separately recognizes the exact inline Chart.js and
+Google Charts grammars present in Aaron's historical decks. It parses their
+literal data without executing legacy JavaScript and emits Presenter's native,
+theme-aware Chart blocks. Unknown programs fail closed to the complete Custom
+HTML fallback. The plugin does not supply or rewrite either external library at
+runtime.

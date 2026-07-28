@@ -3,7 +3,7 @@
  * Plugin Name: Aaron D. Campbell - Presenter Themes
  * Plugin URI: https://aarondcampbell.com/wordpress-plugins/presenter/
  * Description: Aaron's private themes and presentation customizations for Presenter.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Requires at least: 7.0
  * Requires PHP: 8.3
  * Requires Plugins: presenter
@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/includes/class-plugin.php';
 require_once __DIR__ . '/includes/class-legacy-javascript-literal-parser.php';
 require_once __DIR__ . '/includes/class-legacy-google-chart-converter.php';
+require_once __DIR__ . '/includes/class-legacy-chartjs-converter.php';
 
 // phpcs:disable PEAR.NamingConventions.ValidClassName.StartWithCapital -- Public compatibility facade retained for Presenter integrations.
 /**

@@ -3,7 +3,7 @@ Contributors: aaroncampbell
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,11 @@ separately and is never packaged with the public Presenter plugin.
 Install and activate Presenter first, then install and activate this plugin.
 
 == Changelog ==
+
+= 1.4.0 =
+
+* Convert the four characterized inline Chart.js slides into native Presenter Chart blocks without executing legacy JavaScript.
+* Preserve the historical percentage-axis and tooltip semantics while normalizing chart colors into the active Presenter theme.
 
 = 1.3.0 =
 
