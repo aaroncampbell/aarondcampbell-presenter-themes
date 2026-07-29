@@ -61,6 +61,9 @@ The plugin ships three themes:
   and Open Sans fonts, semantic colors, pattern, and fedora artwork from the
   adjacent `aaron-brand` repository
 
+All three themes prefer locally bundled WOFF2 font faces in modern browsers and
+retain their original TTF files as fallbacks.
+
 Aaron Purple remains the default so existing presentations do not change
 themes implicitly. Aaron Brand is available as a separate stable theme ID.
 

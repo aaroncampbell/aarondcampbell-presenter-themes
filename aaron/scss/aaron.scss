@@ -36,7 +36,9 @@ $link-color-dark: color.adjust($link-color, $lightness: -15%);
 
 @font-face {
 	font-family: 'Open Sans';
-	src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+	src:
+		url('fonts/OpenSans-Regular.woff2') format('woff2'),
+		url('fonts/OpenSans-Regular.ttf') format('truetype');
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
@@ -44,7 +46,9 @@ $link-color-dark: color.adjust($link-color, $lightness: -15%);
 
 @font-face {
 	font-family: 'Open Sans';
-	src: url('fonts/OpenSans-Italic.ttf') format('truetype');
+	src:
+		url('fonts/OpenSans-Italic.woff2') format('woff2'),
+		url('fonts/OpenSans-Italic.ttf') format('truetype');
 	font-style: italic;
 	font-weight: 400;
 	font-display: swap;
@@ -52,7 +56,9 @@ $link-color-dark: color.adjust($link-color, $lightness: -15%);
 
 @font-face {
 	font-family: 'Open Sans';
-	src: url('fonts/OpenSans-SemiBold.ttf') format('truetype');
+	src:
+		url('fonts/OpenSans-SemiBold.woff2') format('woff2'),
+		url('fonts/OpenSans-SemiBold.ttf') format('truetype');
 	font-style: normal;
 	font-weight: 600;
 	font-display: swap;
@@ -60,7 +66,9 @@ $link-color-dark: color.adjust($link-color, $lightness: -15%);
 
 @font-face {
 	font-family: 'Open Sans';
-	src: url('fonts/OpenSans-Bold.ttf') format('truetype');
+	src:
+		url('fonts/OpenSans-Bold.woff2') format('woff2'),
+		url('fonts/OpenSans-Bold.ttf') format('truetype');
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
