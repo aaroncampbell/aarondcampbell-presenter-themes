@@ -145,11 +145,32 @@ final class Plugin_Test extends Companion_Test_Case {
 	}
 
 	/**
-	 * Presenter 2.0 receives one Chart plugin ID and a deferred bridge script.
+	 * Plain Presenter 2.0 decks do not receive the compatibility bridge.
 	 */
-	public function test_registers_the_native_chart_bridge_for_slideshows(): void {
+	public function test_omits_the_native_chart_bridge_from_plain_slideshows(): void {
 		$post = self::factory()->post->create_and_get(
 			array( 'post_type' => 'slideshow' )
+		);
+
+		$plugins = $this->plugin->presenter_reveal_plugins(
+			array( 'markdown', 'math', 'chartjs', 'notes', 'math', 'chartjs' ),
+			$post
+		);
+
+		$this->assertSame( array( 'markdown', 'notes' ), $plugins );
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
+	}
+
+	/**
+	 * Presenter 2.0 chart fragments receive one plugin ID and a deferred bridge.
+	 */
+	public function test_registers_the_native_chart_bridge_for_chart_fragments(): void {
+		$post = self::factory()->post->create_and_get(
+			array(
+				'post_content' => '<p class="fragment" data-fragment-graph="marketShareChart" data-fragment-graph-dataset="projectedSeries">Show projection</p>',
+				'post_type'    => 'slideshow',
+			)
 		);
 
 		$plugins  = $this->plugin->presenter_reveal_plugins(
@@ -169,6 +190,25 @@ final class Plugin_Test extends Companion_Test_Case {
 		$this->assertSame( 'defer', $script->extra['strategy'] );
 		$this->assertTrue( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
 		$this->assertFalse( wp_script_is( 'RevealChartjs', 'registered' ) );
+	}
+
+	/**
+	 * An incomplete fragment contract does not load a bridge that cannot act.
+	 */
+	public function test_native_chart_bridge_requires_graph_and_dataset_attributes(): void {
+		$post = self::factory()->post->create_and_get(
+			array(
+				'post_content' => '<p class="fragment" data-fragment-graph="marketShareChart">Show projection</p>',
+				'post_type'    => 'slideshow',
+			)
+		);
+
+		$this->assertSame(
+			array( 'notes' ),
+			$this->plugin->presenter_reveal_plugins( array( 'notes', 'chartjs' ), $post )
+		);
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
 	}
 
 	/**

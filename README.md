@@ -132,8 +132,10 @@ insertion is active.
 
 Legacy Presenter loads the script through the `RevealChartjs` WordPress script
 handle and passes its global plugin object to Reveal. Native Presenter loads the
-same object, registers it as the `chartjs` Presenter Reveal plugin before
-initialization, and includes that ID in the native Reveal configuration. The
+same object only when a slideshow's authored content contains both historical
+fragment attributes, registers it as the `chartjs` Presenter Reveal plugin
+before initialization, and includes that ID in the native Reveal configuration.
+Plain native decks do not download or configure the compatibility bridge. The
 authored graph and dataset global contract is identical in both runtimes.
 
 The migration integration separately recognizes the exact inline Chart.js and

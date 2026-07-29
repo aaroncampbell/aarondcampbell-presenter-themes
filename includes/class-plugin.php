@@ -235,6 +235,17 @@ final class Plugin {
 			return $plugins;
 		}
 
+		$plugins = array_values(
+			array_filter(
+				$plugins,
+				static fn( string $plugin ): bool => ! in_array( $plugin, array( 'math', self::CHART_PLUGIN_ID ), true )
+			)
+		);
+
+		if ( ! $this->native_chart_bridge_required( $post ) ) {
+			return $plugins;
+		}
+
 		wp_register_script(
 			self::NATIVE_CHART_SCRIPT_HANDLE,
 			plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ),
@@ -247,15 +258,18 @@ final class Plugin {
 		);
 		wp_enqueue_script( self::NATIVE_CHART_SCRIPT_HANDLE );
 
-		return array_merge(
-			array_values(
-				array_filter(
-					$plugins,
-					static fn( string $plugin ): bool => ! in_array( $plugin, array( 'math', self::CHART_PLUGIN_ID ), true )
-				)
-			),
-			array( self::CHART_PLUGIN_ID )
-		);
+		return array_merge( $plugins, array( self::CHART_PLUGIN_ID ) );
+	}
+
+	/**
+	 * Check whether a native deck contains the complete historical fragment contract.
+	 *
+	 * @param WP_Post $post Native presentation post.
+	 * @return bool Whether the compatibility bridge is required.
+	 */
+	private function native_chart_bridge_required( WP_Post $post ): bool {
+		return 1 === preg_match( '/\bdata-fragment-graph\s*=/', $post->post_content )
+			&& 1 === preg_match( '/\bdata-fragment-graph-dataset\s*=/', $post->post_content );
 	}
 
 	/**
