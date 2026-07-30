@@ -3,7 +3,7 @@ Contributors: aaroncampbell
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,12 @@ separately and is never packaged with the public Presenter plugin.
 Install and activate Presenter first, then install and activate this plugin.
 
 == Changelog ==
+
+= 1.5.0 =
+
+* Harden public Presenter filter integration against invalid upstream values.
+* Bound legacy chart parsing and defer chart asset registration to the enqueue lifecycle.
+* Improve native chart-bridge detection and modernization release consistency.
 
 = 1.4.0 =
 

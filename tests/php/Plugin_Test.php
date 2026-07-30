@@ -65,6 +65,45 @@ final class Plugin_Test extends Companion_Test_Case {
 	}
 
 	/**
+	 * Public filters recover when an earlier callback violates their value contract.
+	 */
+	public function test_public_filters_recover_from_invalid_earlier_values(): void {
+		$this->plugin->register_hooks();
+		$invalid = static fn(): int => 42;
+
+		// phpcs:disable WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hooks.
+		add_filter( 'presenter-theme-directories', $invalid, 9 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hook.
+		add_filter( 'presenter-default-theme', $invalid, 9 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hook.
+		add_filter( 'presenter-theme', $invalid, 9 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hook.
+		add_filter( 'presenter_theme_registry', $invalid, 9 );
+		add_filter( 'presenter_default_theme_id', $invalid, 9 );
+		add_filter( 'presenter-init-object', $invalid, 9 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hook.
+		add_filter( 'presenter-reveal-js-dependencies', $invalid, 9 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Presenter 1.x public hook.
+
+		try {
+			$this->assertContains( dirname( $this->plugin_file ), apply_filters( 'presenter-theme-directories', array() ) );
+			$this->assertIsString( apply_filters( 'presenter-default-theme', '' ) );
+			$this->assertIsString( apply_filters( 'presenter-theme', '' ) );
+			$this->assertIsArray( apply_filters( 'presenter_theme_registry', array() ) );
+			$this->assertSame( 'black', apply_filters( 'presenter_default_theme_id', 'black', array() ) );
+			$this->assertIsObject( apply_filters( 'presenter-init-object', (object) array() ) );
+			$this->assertSame(
+				array( 'RevealChartjs' ),
+				apply_filters( 'presenter-reveal-js-dependencies', array() )
+			);
+		} finally {
+			remove_filter( 'presenter-theme-directories', $invalid, 9 );
+			remove_filter( 'presenter-default-theme', $invalid, 9 );
+			remove_filter( 'presenter-theme', $invalid, 9 );
+			remove_filter( 'presenter_theme_registry', $invalid, 9 );
+			remove_filter( 'presenter_default_theme_id', $invalid, 9 );
+			remove_filter( 'presenter-init-object', $invalid, 9 );
+			remove_filter( 'presenter-reveal-js-dependencies', $invalid, 9 );
+		}
+		// phpcs:enable WordPress.NamingConventions.ValidHookName.UseUnderscores
+	}
+
+	/**
 	 * Both themes are registered, with Aaron Purple retaining historical aliases and the default.
 	 */
 	public function test_registers_stable_theme_default_and_aliases(): void {
@@ -126,11 +165,17 @@ final class Plugin_Test extends Companion_Test_Case {
 	 * Presenter 1.x receives the Chart global and no optional Math dependency.
 	 */
 	public function test_registers_the_legacy_chart_handle_and_filters_dependencies(): void {
+		$post = self::factory()->post->create_and_get(
+			array( 'post_type' => 'slideshow' )
+		);
+		$this->set_current_post( $post );
+		$this->plugin->enqueue_presentation_scripts();
+
 		$dependencies = $this->plugin->presenter_reveal_js_dependencies(
 			array( 'RevealMarkdown', 'RevealMath', 'RevealChartjs', 'RevealNotes', 'RevealMath' )
 		);
 		$repeated     = $this->plugin->presenter_reveal_js_dependencies( $dependencies );
-		$script       = wp_scripts()->query( 'RevealChartjs', 'registered' );
+		$script = wp_scripts()->query( 'RevealChartjs', 'registered' );
 
 		$this->assertSame(
 			array( 'RevealMarkdown', 'RevealNotes', 'RevealChartjs' ),
@@ -140,7 +185,7 @@ final class Plugin_Test extends Companion_Test_Case {
 		$this->assertInstanceOf( _WP_Dependency::class, $script );
 		$this->assertSame( plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ), $script->src );
 		$this->assertSame( array(), $script->deps );
-		$this->assertSame( '1.3.0', $script->ver );
+		$this->assertSame( '1.5.0', $script->ver );
 		$this->assertSame( 1, $script->extra['group'] );
 	}
 
@@ -156,8 +201,11 @@ final class Plugin_Test extends Companion_Test_Case {
 			array( 'markdown', 'math', 'chartjs', 'notes', 'math', 'chartjs' ),
 			$post
 		);
+		$this->set_current_post( $post );
+		$this->plugin->enqueue_presentation_scripts();
 
 		$this->assertSame( array( 'markdown', 'notes' ), $plugins );
+		$this->assertTrue( wp_script_is( 'RevealChartjs', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
 	}
@@ -172,24 +220,26 @@ final class Plugin_Test extends Companion_Test_Case {
 				'post_type'    => 'slideshow',
 			)
 		);
+		$this->set_current_post( $post );
+		$this->plugin->enqueue_presentation_scripts();
 
 		$plugins  = $this->plugin->presenter_reveal_plugins(
 			array( 'markdown', 'math', 'chartjs', 'notes', 'math', 'chartjs' ),
 			$post
 		);
 		$repeated = $this->plugin->presenter_reveal_plugins( $plugins, $post );
-		$script   = wp_scripts()->query( 'aaron-presenter-chartjs', 'registered' );
+		$script = wp_scripts()->query( 'aaron-presenter-chartjs', 'registered' );
 
 		$this->assertSame( array( 'markdown', 'notes', 'chartjs' ), $plugins );
 		$this->assertSame( $plugins, $repeated );
 		$this->assertInstanceOf( _WP_Dependency::class, $script );
 		$this->assertSame( plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ), $script->src );
 		$this->assertSame( array( 'presenter-frontend' ), $script->deps );
-		$this->assertSame( '1.3.0', $script->ver );
+		$this->assertSame( '1.5.0', $script->ver );
 		$this->assertSame( 1, $script->extra['group'] );
 		$this->assertSame( 'defer', $script->extra['strategy'] );
 		$this->assertTrue( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'RevealChartjs', 'registered' ) );
+		$this->assertTrue( wp_script_is( 'RevealChartjs', 'registered' ) );
 	}
 
 	/**
@@ -209,6 +259,24 @@ final class Plugin_Test extends Companion_Test_Case {
 		);
 		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'enqueued' ) );
+	}
+
+	/**
+	 * Attribute-like text and attributes split across elements do not load the bridge.
+	 */
+	public function test_native_chart_bridge_ignores_false_positive_attribute_text(): void {
+		$post = self::factory()->post->create_and_get(
+			array(
+				'post_content' => '<pre>&lt;p data-fragment-graph="demo" data-fragment-graph-dataset="series"&gt;</pre><p data-fragment-graph="demo">One</p><p data-fragment-graph-dataset="series">Two</p>',
+				'post_type'    => 'slideshow',
+			)
+		);
+
+		$this->assertSame(
+			array( 'notes' ),
+			$this->plugin->presenter_reveal_plugins( array( 'notes' ), $post )
+		);
+		$this->assertFalse( wp_script_is( 'aaron-presenter-chartjs', 'registered' ) );
 	}
 
 	/**
@@ -365,6 +433,11 @@ final class Plugin_Test extends Companion_Test_Case {
 		$query->query_vars['post_type'] = 'slideshow';
 
 		return $query;
+	}
+
+	/** Make one post authoritative for front-end enqueue tests. */
+	private function set_current_post( WP_Post $post ): void {
+		$GLOBALS['post'] = $post;
 	}
 
 	/**

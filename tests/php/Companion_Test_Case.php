@@ -73,7 +73,7 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 			'presenter-theme-directories'      => array(
 				'method'        => 'add_theme_location',
 				'priority'      => 10,
-				'accepted_args' => 2,
+				'accepted_args' => 1,
 			),
 			'presenter-reveal-footer'          => array(
 				'method'        => 'presenter_reveal_footer',
@@ -119,6 +119,11 @@ abstract class Companion_Test_Case extends WP_UnitTestCase {
 				'method'        => 'presenter_reveal_plugins',
 				'priority'      => 10,
 				'accepted_args' => 2,
+			),
+			'wp_enqueue_scripts'               => array(
+				'method'        => 'enqueue_presentation_scripts',
+				'priority'      => 20,
+				'accepted_args' => 0,
 			),
 			'presenter_migration_slide_blocks' => array(
 				'method'        => 'convert_legacy_google_charts',

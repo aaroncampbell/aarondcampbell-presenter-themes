@@ -3,7 +3,7 @@
  * Plugin Name: Aaron D. Campbell - Presenter Themes
  * Plugin URI: https://aarondcampbell.com/wordpress-plugins/presenter/
  * Description: Aaron's private themes and presentation customizations for Presenter.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Requires at least: 7.0
  * Requires PHP: 8.3
  * Requires Plugins: presenter
@@ -32,7 +32,7 @@ require_once __DIR__ . '/includes/class-legacy-chartjs-converter.php';
  * The facade owns the only shared instance. The namespaced Plugin remains an
  * ordinary object whose behavior can be tested without global singleton state.
  *
- * @deprecated 2.0.0 Use AaronCampbell\PresenterThemes\Plugin directly.
+ * @deprecated 1.5.0 Use AaronCampbell\PresenterThemes\Plugin directly.
  */
 final class aaronDCampbellPresenterThemes {
 	/**

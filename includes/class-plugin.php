@@ -46,8 +46,8 @@ final class Plugin {
 	/** Reveal plugin identifier shared with the browser bridge. */
 	private const CHART_PLUGIN_ID = 'chartjs';
 
-	/** Shared legacy and native Chart bridge asset version. */
-	private const CHART_SCRIPT_VERSION = '1.3.0';
+	/** Companion release and shared Chart bridge asset version. */
+	private const VERSION = '1.5.0';
 
 	/**
 	 * Companion plugin entry file.
@@ -80,7 +80,7 @@ final class Plugin {
 			return;
 		}
 
-		add_filter( 'presenter-theme-directories', array( $this, 'add_theme_location' ), 10, 2 );
+		add_filter( 'presenter-theme-directories', array( $this, 'add_theme_location' ), 10, 1 );
 		add_action( 'presenter-reveal-footer', array( $this, 'presenter_reveal_footer' ), 10, 0 );
 		add_action( 'presenter_editor_preview_footer', array( $this, 'presenter_reveal_footer' ), 10, 0 );
 		add_filter( 'presenter-default-theme', array( $this, 'presenter_default_theme' ), 10, 1 );
@@ -90,6 +90,7 @@ final class Plugin {
 		add_filter( 'presenter-init-object', array( $this, 'presenter_init_object' ), 10, 1 );
 		add_filter( 'presenter-reveal-js-dependencies', array( $this, 'presenter_reveal_js_dependencies' ), 10, 1 );
 		add_filter( 'presenter_reveal_plugins', array( $this, 'presenter_reveal_plugins' ), 10, 2 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_presentation_scripts' ), 20, 0 );
 		add_filter( 'presenter_migration_slide_blocks', array( $this, 'convert_legacy_google_charts' ), 10, 2 );
 		add_filter( 'presenter_migration_slide_blocks', array( $this, 'convert_legacy_chartjs' ), 20, 2 );
 		add_action( 'pre_get_posts', array( $this, 'hide_password_protected_slideshows' ), 10, 1 );
@@ -122,11 +123,14 @@ final class Plugin {
 	/**
 	 * Add this plugin to Presenter 1.x's theme discovery roots.
 	 *
-	 * @param array<int, string> $theme_directories Existing theme directories.
+	 * @param mixed $theme_directories Existing theme directories.
 	 * @return array<int, string> Filtered theme directories.
 	 */
-	public function add_theme_location( array $theme_directories ): array {
-		$plugin_directory = dirname( $this->plugin_file );
+	public function add_theme_location( mixed $theme_directories ): array {
+		$theme_directories = is_array( $theme_directories )
+			? array_values( array_filter( $theme_directories, 'is_string' ) )
+			: array();
+		$plugin_directory  = dirname( $this->plugin_file );
 
 		if ( ! in_array( $plugin_directory, $theme_directories, true ) ) {
 			$theme_directories[] = $plugin_directory;
@@ -138,10 +142,10 @@ final class Plugin {
 	/**
 	 * Select Aaron Purple as Presenter 1.x's default stylesheet.
 	 *
-	 * @param string $theme Existing default stylesheet path.
+	 * @param mixed $theme Existing default stylesheet path.
 	 * @return string Aaron Purple's wp-content-relative stylesheet path.
 	 */
-	public function presenter_default_theme( string $theme ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- The filter intentionally replaces Presenter's default.
+	public function presenter_default_theme( mixed $theme ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- The filter intentionally replaces Presenter's default.
 		return str_replace(
 			WP_CONTENT_DIR,
 			'',
@@ -152,10 +156,12 @@ final class Plugin {
 	/**
 	 * Register Aaron's themes with Presenter 2.0's stable theme registry.
 	 *
-	 * @param array<string, object> $themes Presenter themes keyed by stable ID.
+	 * @param mixed $themes Presenter themes keyed by stable ID.
 	 * @return array<string, object> Filtered Presenter themes.
 	 */
-	public function presenter_theme_registry( array $themes ): array {
+	public function presenter_theme_registry( mixed $themes ): array {
+		$themes = is_array( $themes ) ? $themes : array();
+
 		if ( ! class_exists( Theme::class ) ) {
 			return $themes;
 		}
@@ -186,28 +192,27 @@ final class Plugin {
 	/**
 	 * Select Aaron Purple as Presenter 2.0's site default when registered.
 	 *
-	 * @param string                $theme_id Current default theme ID.
-	 * @param array<string, object> $themes   Presenter themes keyed by stable ID.
+	 * @param mixed $theme_id Current default theme ID.
+	 * @param mixed $themes   Presenter themes keyed by stable ID.
 	 * @return string Filtered default theme ID.
 	 */
-	public function presenter_default_theme_id( string $theme_id, array $themes ): string {
+	public function presenter_default_theme_id( mixed $theme_id, mixed $themes ): string {
+		$theme_id = is_string( $theme_id ) && '' !== $theme_id ? $theme_id : 'black';
+		$themes   = is_array( $themes ) ? $themes : array();
+
 		return isset( $themes[ self::THEME_ID ] ) ? self::THEME_ID : $theme_id;
 	}
 
 	/**
 	 * Retain the legacy Chart plugin dependency and remove Reveal Math.
 	 *
-	 * @param array<int, string> $reveal_js_dependencies Reveal script handles.
+	 * @param mixed $reveal_js_dependencies Reveal script handles.
 	 * @return array<int, string> Filtered Reveal script handles.
 	 */
-	public function presenter_reveal_js_dependencies( array $reveal_js_dependencies ): array {
-		wp_register_script(
-			self::CHART_SCRIPT_HANDLE,
-			plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ),
-			array(),
-			self::CHART_SCRIPT_VERSION,
-			true
-		);
+	public function presenter_reveal_js_dependencies( mixed $reveal_js_dependencies ): array {
+		$reveal_js_dependencies          = is_array( $reveal_js_dependencies )
+			? array_values( array_filter( $reveal_js_dependencies, 'is_string' ) )
+			: array();
 		return array_merge(
 			array_values(
 				array_filter(
@@ -226,11 +231,19 @@ final class Plugin {
 	 * each runtime retains the loading contract it requires. Both scripts point
 	 * to the same compatibility asset.
 	 *
-	 * @param array<int, string> $plugins Reveal plugin IDs.
-	 * @param WP_Post            $post    Native presentation post.
+	 * @param mixed $plugins Reveal plugin IDs.
+	 * @param mixed $post    Native presentation post.
 	 * @return array<int, string> Filtered Reveal plugin IDs.
 	 */
-	public function presenter_reveal_plugins( array $plugins, WP_Post $post ): array {
+	public function presenter_reveal_plugins( mixed $plugins, mixed $post ): array {
+		$plugins = is_array( $plugins )
+			? array_values( array_filter( $plugins, 'is_string' ) )
+			: array();
+
+		if ( ! $post instanceof WP_Post ) {
+			return $plugins;
+		}
+
 		if ( 'slideshow' !== $post->post_type ) {
 			return $plugins;
 		}
@@ -246,19 +259,43 @@ final class Plugin {
 			return $plugins;
 		}
 
+		return array_merge( $plugins, array( self::CHART_PLUGIN_ID ) );
+	}
+
+	/** Register legacy assets and enqueue a required native bridge on an action. */
+	public function enqueue_presentation_scripts(): void {
+		$post = get_queried_object();
+		if ( ! $post instanceof WP_Post ) {
+			$post = get_post();
+		}
+
+		if ( ! $post instanceof WP_Post || 'slideshow' !== $post->post_type ) {
+			return;
+		}
+
+		wp_register_script(
+			self::CHART_SCRIPT_HANDLE,
+			plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ),
+			array(),
+			self::VERSION,
+			true
+		);
+
+		if ( ! $this->native_chart_bridge_required( $post ) ) {
+			return;
+		}
+
 		wp_register_script(
 			self::NATIVE_CHART_SCRIPT_HANDLE,
 			plugins_url( 'js/chartjs-plugin.js', $this->plugin_file ),
 			array( 'presenter-frontend' ),
-			self::CHART_SCRIPT_VERSION,
+			self::VERSION,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
 			)
 		);
 		wp_enqueue_script( self::NATIVE_CHART_SCRIPT_HANDLE );
-
-		return array_merge( $plugins, array( self::CHART_PLUGIN_ID ) );
 	}
 
 	/**
@@ -268,21 +305,36 @@ final class Plugin {
 	 * @return bool Whether the compatibility bridge is required.
 	 */
 	private function native_chart_bridge_required( WP_Post $post ): bool {
-		return 1 === preg_match( '/\bdata-fragment-graph\s*=/', $post->post_content )
-			&& 1 === preg_match( '/\bdata-fragment-graph-dataset\s*=/', $post->post_content );
+		$processor = new \WP_HTML_Tag_Processor( $post->post_content );
+
+		while ( $processor->next_tag() ) {
+			if (
+				null !== $processor->get_attribute( 'data-fragment-graph' )
+				&& null !== $processor->get_attribute( 'data-fragment-graph-dataset' )
+			) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
 	 * Rewrite only Aaron Purple's historical theme URL to its plugin location.
 	 *
-	 * @param string $theme Current theme URL.
+	 * @param mixed $theme Current theme URL.
 	 * @return string Filtered theme URL.
 	 */
-	public function presenter_theme( string $theme ): string {
+	public function presenter_theme( mixed $theme ): string {
 		$historical_url = content_url( '/themes/aarondcampbell/presenter/aaron-purple/aaron-purple.css' );
+		$stylesheet_url = plugins_url( self::THEME_STYLESHEET, $this->plugin_file );
+
+		if ( ! is_string( $theme ) || '' === $theme ) {
+			return $stylesheet_url;
+		}
 
 		return $historical_url === $theme
-			? plugins_url( self::THEME_STYLESHEET, $this->plugin_file )
+			? $stylesheet_url
 			: $theme;
 	}
 
@@ -305,10 +357,14 @@ final class Plugin {
 	/**
 	 * Disable foreground and background transitions by default.
 	 *
-	 * @param object $reveal_initialize_object Reveal initialization settings.
+	 * @param mixed $reveal_initialize_object Reveal initialization settings.
 	 * @return object Filtered Reveal initialization settings.
 	 */
-	public function presenter_init_object( object $reveal_initialize_object ): object {
+	public function presenter_init_object( mixed $reveal_initialize_object ): object {
+		$reveal_initialize_object = is_object( $reveal_initialize_object )
+			? $reveal_initialize_object
+			: (object) array();
+
 		$reveal_initialize_object->transition = 'none';
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Reveal.js owns this public configuration key.
 		$reveal_initialize_object->backgroundTransition = 'none';

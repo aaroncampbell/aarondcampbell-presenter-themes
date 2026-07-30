@@ -11,12 +11,25 @@ use RuntimeException;
 
 /** Parse inert legacy literals without evaluating JavaScript. */
 final class Legacy_Javascript_Literal_Parser {
+	/** Maximum inert source bytes accepted from one legacy chart. */
+	private const MAX_SOURCE_BYTES = 1000000;
+
+	/** Maximum nested array/object containers. */
+	private const MAX_DEPTH = 64;
+
 	/**
 	 * Current byte offset.
 	 *
 	 * @var int
 	 */
 	private int $offset = 0;
+
+	/**
+	 * Current array/object nesting depth.
+	 *
+	 * @var int
+	 */
+	private int $depth = 0;
 
 	/**
 	 * Create a parser.
@@ -32,6 +45,10 @@ final class Legacy_Javascript_Literal_Parser {
 	 * @throws RuntimeException For unsupported syntax.
 	 */
 	public function parse(): mixed {
+		if ( strlen( $this->source ) > self::MAX_SOURCE_BYTES ) {
+			throw new RuntimeException( 'JavaScript literal exceeds the parser size limit.' );
+		}
+
 		$value = $this->expression();
 		$this->whitespace();
 		if ( strlen( $this->source ) !== $this->offset ) {
@@ -93,7 +110,14 @@ final class Legacy_Javascript_Literal_Parser {
 			if ( count( $parts ) < 2 || count( $parts ) > 3 || array_filter( $parts, static fn( mixed $part ): bool => ! is_int( $part ) ) ) {
 				throw new RuntimeException( 'Unsupported Date constructor.' );
 			}
-			return sprintf( '%04d-%02d-%02d', $parts[0], $parts[1] + 1, $parts[2] ?? 1 );
+			$year  = $parts[0];
+			$month = $parts[1] + 1;
+			$day   = $parts[2] ?? 1;
+			if ( $year < 1 || $year > 9999 || ! checkdate( $month, $day, $year ) ) {
+				throw new RuntimeException( 'Invalid Date constructor.' );
+			}
+
+			return sprintf( '%04d-%02d-%02d', $year, $month, $day );
 		}
 		foreach ( array(
 			'true'  => true,
@@ -109,33 +133,43 @@ final class Legacy_Javascript_Literal_Parser {
 
 	/** Parse an array literal. */
 	private function array_value(): array {
-		$this->require( '[' );
-		$result = array();
-		if ( $this->consume( ']' ) ) {
+		$this->enter_container();
+		try {
+			$this->require( '[' );
+			$result = array();
+			if ( $this->consume( ']' ) ) {
+				return $result;
+			}
+			do {
+				$result[] = $this->expression();
+			} while ( $this->consume( ',' ) && ! $this->peek( ']' ) );
+			$this->require( ']' );
 			return $result;
+		} finally {
+			--$this->depth;
 		}
-		do {
-			$result[] = $this->expression();
-		} while ( $this->consume( ',' ) && ! $this->peek( ']' ) );
-		$this->require( ']' );
-		return $result;
 	}
 
 	/** Parse an object literal. */
 	private function object_value(): array {
-		$this->require( '{' );
-		$result = array();
-		if ( $this->consume( '}' ) ) {
+		$this->enter_container();
+		try {
+			$this->require( '{' );
+			$result = array();
+			if ( $this->consume( '}' ) ) {
+				return $result;
+			}
+			do {
+				$this->whitespace();
+				$key = in_array( $this->source[ $this->offset ] ?? '', array( '"', "'" ), true ) ? $this->string_value() : $this->identifier();
+				$this->require( ':' );
+				$result[ $key ] = $this->expression();
+			} while ( $this->consume( ',' ) && ! $this->peek( '}' ) );
+			$this->require( '}' );
 			return $result;
+		} finally {
+			--$this->depth;
 		}
-		do {
-			$this->whitespace();
-			$key = in_array( $this->source[ $this->offset ] ?? '', array( '"', "'" ), true ) ? $this->string_value() : $this->identifier();
-			$this->require( ':' );
-			$result[ $key ] = $this->expression();
-		} while ( $this->consume( ',' ) && ! $this->peek( '}' ) );
-		$this->require( '}' );
-		return $result;
 	}
 
 	/**
@@ -158,16 +192,63 @@ final class Legacy_Javascript_Literal_Parser {
 					throw new RuntimeException( 'Unterminated JavaScript escape sequence.' );
 				}
 				$escaped = $this->source[ $this->offset++ ];
-				$value  .= array(
-					'n' => "\n",
-					'r' => "\r",
-					't' => "\t",
-				)[ $escaped ] ?? $escaped;
+				$simple  = array(
+					"'"  => "'",
+					'"'  => '"',
+					'\\' => '\\',
+					'/'  => '/',
+					'b'  => "\x08",
+					'f'  => "\x0c",
+					'n'  => "\n",
+					'r'  => "\r",
+					't'  => "\t",
+					'v'  => "\x0b",
+					'0'  => "\0",
+				);
+				if ( array_key_exists( $escaped, $simple ) ) {
+					$value .= $simple[ $escaped ];
+					continue;
+				}
+				if ( 'u' === $escaped ) {
+					$hex = substr( $this->source, $this->offset, 4 );
+					if ( 4 !== strlen( $hex ) || ! ctype_xdigit( $hex ) ) {
+						throw new RuntimeException( 'Invalid JavaScript Unicode escape.' );
+					}
+					$decoded = json_decode( '"\\u' . $hex . '"', true );
+					if ( ! is_string( $decoded ) ) {
+						throw new RuntimeException( 'Unsupported JavaScript Unicode escape.' );
+					}
+					$this->offset += 4;
+					$value        .= $decoded;
+					continue;
+				}
+				if ( 'x' === $escaped ) {
+					$hex = substr( $this->source, $this->offset, 2 );
+					if ( 2 !== strlen( $hex ) || ! ctype_xdigit( $hex ) ) {
+						throw new RuntimeException( 'Invalid JavaScript hexadecimal escape.' );
+					}
+					$this->offset += 2;
+					$value        .= chr( hexdec( $hex ) );
+					continue;
+				}
+				throw new RuntimeException( 'Unsupported JavaScript escape sequence.' );
 			} else {
 				$value .= $character;
 			}
 		}
 		throw new RuntimeException( 'Unterminated JavaScript string.' );
+	}
+
+	/**
+	 * Enter one bounded recursive container.
+	 *
+	 * @throws RuntimeException When the nesting limit is exceeded.
+	 */
+	private function enter_container(): void {
+		if ( $this->depth >= self::MAX_DEPTH ) {
+			throw new RuntimeException( 'JavaScript literal exceeds the parser depth limit.' );
+		}
+		++$this->depth;
 	}
 
 	/**
