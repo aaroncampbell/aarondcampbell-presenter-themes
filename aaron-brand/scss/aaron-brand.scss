@@ -157,6 +157,29 @@ $background-image: url('images/aarondcampbell-pattern-05opacity.plain.svg');
 		color: $plum;
 	}
 
+	&.has-dark-background .persistent-twitter-link {
+		a {
+			color: $white;
+		}
+
+		svg {
+			fill: $white;
+		}
+
+		a:hover {
+			color: $violet-tint;
+
+			svg {
+				fill: $violet-tint;
+			}
+		}
+	}
+
+	.controls[data-controls-layout='bottom-right'] {
+		bottom: calc(var(--r-controls-spacing) + 1em);
+		right: calc(var(--r-controls-spacing) + 3.6em);
+	}
+
 	.aaron-brand-mark {
 		display: inline-block;
 		width: 3em;

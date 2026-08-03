@@ -735,6 +735,22 @@ section.has-dark-background h6 {
   background: #e7e5ea;
   color: #5e527a;
 }
+.reveal.has-dark-background .persistent-twitter-link a {
+  color: #fff;
+}
+.reveal.has-dark-background .persistent-twitter-link svg {
+  fill: #fff;
+}
+.reveal.has-dark-background .persistent-twitter-link a:hover {
+  color: #dcd1f7;
+}
+.reveal.has-dark-background .persistent-twitter-link a:hover svg {
+  fill: #dcd1f7;
+}
+.reveal .controls[data-controls-layout=bottom-right] {
+  bottom: calc(var(--r-controls-spacing) + 1em);
+  right: calc(var(--r-controls-spacing) + 3.6em);
+}
 .reveal .aaron-brand-mark {
   display: inline-block;
   width: 3em;
