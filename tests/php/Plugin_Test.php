@@ -175,7 +175,7 @@ final class Plugin_Test extends Companion_Test_Case {
 			array( 'RevealMarkdown', 'RevealMath', 'RevealChartjs', 'RevealNotes', 'RevealMath' )
 		);
 		$repeated     = $this->plugin->presenter_reveal_js_dependencies( $dependencies );
-		$script = wp_scripts()->query( 'RevealChartjs', 'registered' );
+		$script       = wp_scripts()->query( 'RevealChartjs', 'registered' );
 
 		$this->assertSame(
 			array( 'RevealMarkdown', 'RevealNotes', 'RevealChartjs' ),
@@ -228,7 +228,7 @@ final class Plugin_Test extends Companion_Test_Case {
 			$post
 		);
 		$repeated = $this->plugin->presenter_reveal_plugins( $plugins, $post );
-		$script = wp_scripts()->query( 'aaron-presenter-chartjs', 'registered' );
+		$script   = wp_scripts()->query( 'aaron-presenter-chartjs', 'registered' );
 
 		$this->assertSame( array( 'markdown', 'notes', 'chartjs' ), $plugins );
 		$this->assertSame( $plugins, $repeated );
@@ -435,8 +435,13 @@ final class Plugin_Test extends Companion_Test_Case {
 		return $query;
 	}
 
-	/** Make one post authoritative for front-end enqueue tests. */
+	/**
+	 * Make one post authoritative for front-end enqueue tests.
+	 *
+	 * @param WP_Post $post Slideshow fixture.
+	 */
 	private function set_current_post( WP_Post $post ): void {
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- The front-end enqueue contract reads the current post global.
 		$GLOBALS['post'] = $post;
 	}
 

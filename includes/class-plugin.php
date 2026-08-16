@@ -210,7 +210,7 @@ final class Plugin {
 	 * @return array<int, string> Filtered Reveal script handles.
 	 */
 	public function presenter_reveal_js_dependencies( mixed $reveal_js_dependencies ): array {
-		$reveal_js_dependencies          = is_array( $reveal_js_dependencies )
+		$reveal_js_dependencies = is_array( $reveal_js_dependencies )
 			? array_values( array_filter( $reveal_js_dependencies, 'is_string' ) )
 			: array();
 		return array_merge(
